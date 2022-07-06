@@ -52,6 +52,8 @@ class UserProfile(APIView):
         profile=Profile.objects.get(user=user.pk)
         serializer = ProfileSerializer(profile)
 
+
        
         
         return Response(serializer.data)
+

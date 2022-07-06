@@ -51,8 +51,8 @@ export default function Profile(){
                             
                             <p className="text-muted mb-3">{profileData.user.about}</p>
                             <div className="d-flex ">
-                                <div className="btn btn-primary follow me-2">Follow</div>
-                                <div className="btn btn-outline-primary message">Message</div>
+                                {/* <div className="btn btn-primary follow me-2">Follow</div> */}
+                                <div className="btn btn-outline-primary message">Edit</div>
                             </div>
                         </div>
                     </div>

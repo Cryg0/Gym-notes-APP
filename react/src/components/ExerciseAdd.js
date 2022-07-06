@@ -69,7 +69,7 @@ try{
         <form>
   <div className="mb-2">
     <label  className="form-label">Name</label>
-    <input onChange={handleChange} name='name' type="text" className="form-control"/>
+    <input onChange={handleChange} name='name' type="text" className="form-control" />
   </div>
   <div className="mb-3">
     <label  className="form-label">Weight</label>

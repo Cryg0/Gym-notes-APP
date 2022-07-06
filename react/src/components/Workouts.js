@@ -1,5 +1,5 @@
 import React from 'react'
-import Popup from './WorkoutAdd'
+import WorkoutAdd from './WorkoutAdd'
 import axios from 'axios'
 import {Link} from 'react-router-dom'
 import WorkoutUpdate from './WorkoutUpdate'
@@ -91,7 +91,7 @@ const deleteWorkout=(workoutId)=>{
     <div className='container'>
     <div className="col ">
     <button style={{float:'right'}} onClick={handlePopup} type="button" className="btn btn-primary btn-lg mb-3">Add new </button>
-    {isClicked && <Popup handleClose={handlePopup} />}
+    {isClicked && <WorkoutAdd handleClose={handlePopup} />}
     {isClicked2 && <WorkoutUpdate handleClose={handlePopup1} workout={workoutId} />}
     </div>
     <div className="container bg-light mt-5 ">
@@ -100,13 +100,13 @@ const deleteWorkout=(workoutId)=>{
         <table className="table table-borderless">
             <thead>
                 <tr className="p-0">
-                    <td className="w350 p-0" scope="col">
+                    <td className="w350 p-0" >
                         <small className="  btn btn-primary h-1 px-2 mb-2">Upcoming workouts</small>
                     </td>
-                    <td className="text-center w100 p-0 py-2" scope="col"><small className="text-muted">Date</small>
+                    <td className="text-center w100 p-0 py-2" ><small className="text-muted">Date</small>
                     </td>
                    
-                    <td className="text-center w100 p-0 py-2" scope="col"><small className="text-muted">Status</small></td>
+                    <td className="text-center w100 p-0 py-2" ><small className="text-muted">Status</small></td>
                     
                 </tr>
             </thead>
@@ -140,12 +140,12 @@ const deleteWorkout=(workoutId)=>{
         <table className="table table-borderless">
             <thead>
                 <tr className="p-0">
-                    <td className="w350 p-0" scope="col">
+                    <td className="w350 p-0" >
                         <small className=" btn btn-primary h-2 px-2">Finished workouts</small>
                     </td>
-                    <td className="text-center w100 p-0 py-2" scope="col">
+                    <td className="text-center w100 p-0 py-2" >
                     </td>
-                    <td className="text-center w100 p-0 py-2" scope="col">
+                    <td className="text-center w100 p-0 py-2" >
                     </td>
                     
                     

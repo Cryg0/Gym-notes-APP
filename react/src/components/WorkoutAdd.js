@@ -10,11 +10,10 @@ const baseUrl='http://127.0.0.1:8000/api'
 
 
 
-const Popup = props => {
+const WorkoutAdd = props => {
 
   let {user,authTokens}=React.useContext(AuthContext)
-  console.log(user)
-
+  
     const data = [
         {
           value: "cerulean",
@@ -61,8 +60,7 @@ const Popup = props => {
     const [workoutData,setWorkoutData] = React.useState({
       'name':'',
       'date':'',
-      // 'user':'1',
-      // 'status':'active'
+    
     })
     
 
@@ -93,7 +91,6 @@ try{
   .then((res)=>{
     if(res){
       const pk=res.data
-      console.log(pk)
       exerciseForm.append('pk',pk)
       exerciseSubmit(pk)
     }
@@ -110,7 +107,7 @@ try{
     }
   })
   .then((res)=>{
-    if(res.status==200){
+    if(res.status===200){
     const Swal = require('sweetalert2')
     Swal.fire({
         position: 'top-right',
@@ -118,7 +115,6 @@ try{
         icon: 'success',
         title: 'Workout has been created',
         showConfirmButton: false,
-        timeProgressBar:true,
         timer: 1500
     })
     props.handleClose()
@@ -181,4 +177,4 @@ try{
 
 
 
-export default Popup;
+export default WorkoutAdd;

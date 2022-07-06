@@ -2,10 +2,7 @@ import React from "react";
 import axios from 'axios'
 import AuthContext from "./context/AuthContext";
 
-
-
 const baseUrl = 'http://127.0.0.1:8000/api'
-
 
 
 const WorkoutUpdate = props => {
@@ -35,7 +32,7 @@ const WorkoutUpdate = props => {
     workoutForm.append('user', user.user_id)
     workoutForm.append('status', workoutData.status)
 
-    console.log(workoutForm)
+    
     try {
       axios.put(baseUrl + "/workouts/" + props.workout + '/', workoutForm,
         { headers: { 'Authorization': 'JWT ' + String(authTokens.access) } }
@@ -47,7 +44,7 @@ const WorkoutUpdate = props => {
               position: 'top-right',
               toast: true,
               icon: 'success',
-              title: 'Exercise details updated',
+              title: 'Workout details updated',
               showConfirmButton: false,
               timeProgressBar: true,
               timer: 1500

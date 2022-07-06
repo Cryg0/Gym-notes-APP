@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import ExerciseAdd from './ExerciseAdd'
 
-import ExercisePopup from './ExerciseUpdate'
+import ExerciseUpdate from './ExerciseUpdate'
 
 const Swal = require('sweetalert2')
 
@@ -57,7 +57,6 @@ const deleteExercise=(excerciseId)=>{
                         icon: 'success',
                         title: 'Exercise has been deleted',
                         showConfirmButton: false,
-                        timeProgressBar:true,
                         timer: 1500
                     })
                     try{
@@ -89,7 +88,7 @@ const handlePopup1 = () => {
       <div className="container ">
         <div className='col'><button onClick={(handlePopup1)} style={{float:'right'}} type="button" className="btn btn-primary btn-lg mb-2">Add exercise</button></div>
         
-        {isClicked && <ExercisePopup handleClose={handlePopup} workout={workoutId} exercise={exerciseId} />}
+        {isClicked && <ExerciseUpdate handleClose={handlePopup} workout={workoutId} exercise={exerciseId} />}
         {isClicked1 && <ExerciseAdd handleClose={handlePopup1} workout={workoutId}  />}
       <table className="table table-borderless table-responsive card-1 p-4 ">
 <thead>

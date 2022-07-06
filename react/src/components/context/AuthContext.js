@@ -15,8 +15,9 @@ import jwt_decode from "jwt-decode";
   
     
     const [user,setUser]=useState(()=>localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')): null)
-    let [authTokens,setAuthTokens] = useState(()=>localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')): null)
-    let [loading,setLoading] = useState(true)
+    const [authTokens,setAuthTokens] = useState(()=>localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')): null)
+    const [loading,setLoading] = useState(true)
+    const [res,setRes]=useState({})
     
 
     let loginUser=  (e)=>{
@@ -34,10 +35,12 @@ import jwt_decode from "jwt-decode";
                 localStorage.setItem('authTokens',JSON.stringify(response.data))
                 window.location.href='/'
             }else{
-                console.log('wrong credentials')
+                
             }
         }).catch(error =>{
-            
+            console.log(error.response.data)
+           setRes({'401':error.response.data.detail})
+        
         })
         
     }
@@ -46,6 +49,9 @@ import jwt_decode from "jwt-decode";
     let logoutUser = ()=>{
         setAuthTokens(null)
         setUser(null)
+        axios.post('http://127.0.0.1:8000/api/user/logout/blacklist/',authTokens.refresh)
+
+
         localStorage.removeItem('authTokens')
         window.location.href('/login')
 
@@ -80,6 +86,7 @@ import jwt_decode from "jwt-decode";
         loginUser:loginUser,
         logoutUser:logoutUser,
         authTokens:authTokens,
+        res:res
 
         }
 

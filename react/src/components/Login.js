@@ -1,12 +1,12 @@
 
 import React from 'react'
+
 import AuthContext from './context/AuthContext'
 
-const baseUrl='http://127.0.0.1:8000/api/'
 
-export default function Login(){
-    let {loginUser} = React.useContext(AuthContext)
-    
+
+export default function Login(props){
+    let {loginUser,res} = React.useContext(AuthContext)
     
     
     
@@ -16,6 +16,9 @@ export default function Login(){
         <div className="row">
            
             <div className="col-md-4 offset-md-4">
+            {res['401'] && <div class="alert alert-danger" role="alert">
+                {res['401']}
+            </div> }
                 <div className="login-form bg-light mt-4 p-4">
                     <form onSubmit={loginUser} method="" className="row g-3">
                         <h4>Welcome Back</h4>

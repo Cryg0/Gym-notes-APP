@@ -8,45 +8,34 @@ import axios from 'axios'
 const baseUrl='http://127.0.0.1:8000/api'
 
 
-const ExerciseUpdate = props => {
+const Profile = props => {
        
 
-    const [exerciseData,setExerciseData]=React.useState([{
-        "id": '',
-        "name": "",
-        "weight": "",
-        "sets": "",
-        "reps": "",
-        "workout":''
-        }])
+    const [profileData,setProfileData]= React.useState({'user':{}})
         
     
   const handleChange=(event)=>{
   
-  setExerciseData({
-    ...exerciseData,
+  setProfileData({
+    ...profileData,
     [event.target.name]:event.target.value
   })
   }
   
   const formSubmit=()=>{
-    const exerciseForm = new FormData()
-    exerciseForm.append('name',exerciseData.name)
-    exerciseForm.append('weight',exerciseData.weight)
-    exerciseForm.append('sets',exerciseData.sets)
-    exerciseForm.append('reps',exerciseData.reps)
-    exerciseForm.append('workout',props.workout)
+    const profileForm = new FormData()
+    profileForm.append('name',profileData.user.first_name)
   
   
 
   try{
-  axios.put(baseUrl+"/exercises/"+props.exercise+'/',exerciseForm,{
+  axios.put(baseUrl+"/exercises/"+props.exercise+'/',profileForm,{
     headers :{
       'content-type':'multipart/form-data'
     }
   })
   .then((res)=>{
-    if(res.status===200){
+    if(res.status==200){
     const Swal = require('sweetalert2')
     Swal.fire({
         position: 'top-right',
@@ -54,7 +43,7 @@ const ExerciseUpdate = props => {
         icon: 'success',
         title: 'Exercise details updated',
         showConfirmButton: false,
-       
+        timeProgressBar:true,
         timer: 1500
     })
     props.handleClose()
@@ -75,7 +64,7 @@ const ExerciseUpdate = props => {
     try{
     axios.get(baseUrl+'/exercises/'+props.exercise+'/')
     .then((res)=>{
-        setExerciseData(res.data);
+        setprofileData(res.data);
     });
 }catch(error){
     console.log(error)
@@ -93,19 +82,19 @@ const ExerciseUpdate = props => {
         <form>
   <div className="mb-2">
     <label  className="form-label">Name</label>
-    <input onChange={handleChange} value={exerciseData.name} name='name' type="text" className="form-control"/>
+    <input onChange={handleChange} value={profileData.name} name='name' type="text" className="form-control"/>
   </div>
   <div className="mb-3">
     <label  className="form-label">Weight</label>
-    <input onChange={handleChange} value={exerciseData.weight} name='weight' type="text" className="form-control" />
+    <input onChange={handleChange} value={profileData.weight} name='weight' type="text" className="form-control" />
   </div>
   <div className="mb-3">
     <label  className="form-label">Sets</label>
-    <input onChange={handleChange} value={exerciseData.sets} name='sets' type="text" className="form-control" />
+    <input onChange={handleChange} value={profileData.sets} name='sets' type="text" className="form-control" />
   </div>
   <div className="mb-3">
     <label  className="form-label">Reps</label>
-    <input onChange={handleChange} value={exerciseData.reps} name='reps' type="text" className="form-control" />
+    <input onChange={handleChange} value={profileData.reps} name='reps' type="text" className="form-control" />
   </div>
   
   
@@ -125,4 +114,4 @@ const ExerciseUpdate = props => {
   
   }
 
-  export default ExerciseUpdate;
+  export default ProfileEdit;

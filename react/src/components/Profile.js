@@ -1,17 +1,17 @@
 import axios from 'axios'
-
 import React from 'react'
 import AuthContext from './context/AuthContext'
+import ProfileEdit from './ProfileEdit.'
 
 
 
 export default function Profile(){
 
-    let {user,authTokens}=React.useContext(AuthContext)
+    let {authTokens}=React.useContext(AuthContext)
+    const [isClicked,setIsClicked]=React.useState(false)
+    const handlePopup = () => {setIsClicked(prev => !prev)}
+    const [profileData,setProfileData]= React.useState({'user':{},'picture':''})
 
-    const [profileData,setProfileData]= React.useState({'user':{}})
-    
-   
 
     React.useEffect(()=>{
         try{
@@ -23,10 +23,9 @@ export default function Profile(){
         }catch(error){
             console.log(error)
         }
-    },[])
+    },[isClicked])
 
 
-    
 
     return(
         <div className="container">
@@ -45,15 +44,16 @@ export default function Profile(){
                     <div className="col-12 bg-white p-0 px-3 py-3 mb-3">
                         <div className="d-flex flex-column align-items-center">
                             <img className="photo"
-                                src={profileData.picture}
+                                src={"http://127.0.0.1:8000"+profileData.picture}
                                 alt=""/>
                             <p className="fw-bold h4 mt-3">{profileData.user.username}</p>
                             
                             <p className="text-muted mb-3">{profileData.user.about}</p>
                             <div className="d-flex ">
                                 {/* <div className="btn btn-primary follow me-2">Follow</div> */}
-                                <div className="btn btn-outline-primary message">Edit</div>
+                                <div className="btn btn-outline-primary message" onClick={handlePopup}>Edit</div>
                             </div>
+                            {isClicked && <ProfileEdit handleClose={handlePopup} />}
                         </div>
                     </div>
                     <div className="col-12 bg-white p-0 px-2 pb-3 mb-3">

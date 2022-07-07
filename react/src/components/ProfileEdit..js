@@ -1,6 +1,6 @@
 import React from "react";
-
 import axios from 'axios'
+import AuthContext from "./context/AuthContext";
 
 
 
@@ -8,42 +8,48 @@ import axios from 'axios'
 const baseUrl='http://127.0.0.1:8000/api'
 
 
-const Profile = props => {
+const ProfileEdit = props => {
        
-
-    const [profileData,setProfileData]= React.useState({'user':{}})
-        
-    
+  let{authTokens}=React.useContext(AuthContext)
+  const [profileData,setProfileData]= React.useState({'user':{'first_name':''}})
   const handleChange=(event)=>{
   
   setProfileData({
     ...profileData,
-    [event.target.name]:event.target.value
+    'user':{[event.target.name]:event.target.value}
   })
+  console.log(profileData)
+  }
+
+  const handleFileChange = (event)=>{
+    setProfileData({
+      ...profileData,
+      [event.target.name]:event.target.files[0]
+    })
+   
   }
   
   const formSubmit=()=>{
     const profileForm = new FormData()
-    profileForm.append('name',profileData.user.first_name)
+    profileForm.append('first_name',profileData.user.first_name)
+    profileForm.append('picture',profileData.picture,profileData.picture.name)
   
-  
-
   try{
-  axios.put(baseUrl+"/exercises/"+props.exercise+'/',profileForm,{
+  axios.put(baseUrl+"/user/profile/",profileForm,{
     headers :{
-      'content-type':'multipart/form-data'
+      'content-type':'multipart/form-data',
+      'Authorization':'JWT '+String(authTokens.access)
     }
   })
   .then((res)=>{
-    if(res.status==200){
+    if(res.status===200){
     const Swal = require('sweetalert2')
     Swal.fire({
         position: 'top-right',
         toast:true,
         icon: 'success',
-        title: 'Exercise details updated',
+        title: 'Profile details updated',
         showConfirmButton: false,
-        timeProgressBar:true,
         timer: 1500
     })
     props.handleClose()
@@ -62,9 +68,9 @@ const Profile = props => {
   
   React.useEffect(()=>{
     try{
-    axios.get(baseUrl+'/exercises/'+props.exercise+'/')
+    axios.get(baseUrl+'/user/profile/', {headers:{'Authorization':'JWT '+String(authTokens.access)}})
     .then((res)=>{
-        setprofileData(res.data);
+        setProfileData(res.data);
     });
 }catch(error){
     console.log(error)
@@ -81,29 +87,16 @@ const Profile = props => {
         {props.content}
         <form>
   <div className="mb-2">
-    <label  className="form-label">Name</label>
-    <input onChange={handleChange} value={profileData.name} name='name' type="text" className="form-control"/>
+    <label  className="form-label">First name</label>
+    <input onChange={handleChange} value={profileData.user.first_name}  name='first_name' type="text" className="form-control"/>
   </div>
   <div className="mb-3">
-    <label  className="form-label">Weight</label>
-    <input onChange={handleChange} value={profileData.weight} name='weight' type="text" className="form-control" />
-  </div>
-  <div className="mb-3">
-    <label  className="form-label">Sets</label>
-    <input onChange={handleChange} value={profileData.sets} name='sets' type="text" className="form-control" />
-  </div>
-  <div className="mb-3">
-    <label  className="form-label">Reps</label>
-    <input onChange={handleChange} value={profileData.reps} name='reps' type="text" className="form-control" />
+    <label  className="form-label">Profile picture</label>
+    <img src={"http://127.0.0.1:8000"+profileData.picture} className="img-thumbnail mx-4 mb-2" alt="..."></img>
+    <input onChange={handleFileChange} name='picture' type="file" className="form-control" />
   </div>
   
-  
-
-  
-  
-  
-  
-  <button onClick={formSubmit} type="button" className="btn btn-primary">Submit</button>
+   <button onClick={formSubmit} type="button" className="btn btn-primary">Submit</button>
   </form>
       </div>
     </div>

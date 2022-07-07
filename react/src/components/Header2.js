@@ -46,7 +46,7 @@ export default function Header2(){
           {user == null &&
               <ul className="navbar-nav ms-auto mb-5 mb-lg-0">
               <li className="nav-item">
-                <a className="nav-link " href="/login" tabindex="-1" aria-disabled="true">Login</a>
+                <a className="nav-link " href="/login" tabIndex="-1" aria-disabled="true">Login</a>
               </li>
               </ul>
              }

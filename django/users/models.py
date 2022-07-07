@@ -50,7 +50,7 @@ class Profile(models.Model):
 
 
 
-    user=models.ForeignKey(
+    user=models.OneToOneField(
         User,
         on_delete=models.CASCADE,
         related_name='profile'

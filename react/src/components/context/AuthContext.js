@@ -49,11 +49,11 @@ import jwt_decode from "jwt-decode";
     let logoutUser = ()=>{
         setAuthTokens(null)
         setUser(null)
-        axios.post('http://127.0.0.1:8000/api/user/logout/blacklist/',authTokens.refresh)
+        axios.post('http://127.0.0.1:8000/api/user/logout/blacklist/',{"refresh":authTokens.refresh})
 
 
         localStorage.removeItem('authTokens')
-        window.location.href('/login')
+        window.location.href='/login'
 
     }
 

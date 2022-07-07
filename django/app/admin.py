@@ -9,9 +9,6 @@ class AuthorAdmin(admin.ModelAdmin):
     list_filter=('author',)
     search_fields= ['status']
 
-    # fieldsets= ('General',{'fields':('title',)}),
-    # ('Availability',{'Fields':{'slug'}})
-
 admin.site.register(models.Category)
 admin.site.register(models.Exercise)
 admin.site.register(models.Workout)

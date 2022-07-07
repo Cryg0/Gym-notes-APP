@@ -33,7 +33,7 @@ export default function Login(props){
                         <div className="col-12">
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" id="rememberMe"/>
-                                <label className="form-check-label" for="rememberMe"> Remember me</label>
+                                <label className="form-check-label" htmlFor="rememberMe"> Remember me</label>
 
                             </div>
                         </div>

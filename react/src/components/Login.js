@@ -1,20 +1,14 @@
 
 import React from 'react'
-
 import AuthContext from './context/AuthContext'
 
 
-
-export default function Login(props){
+export default function Login(){
     let {loginUser,res} = React.useContext(AuthContext)
-    
-    
     
    return (
 <div className="container">
     
-        <div className="row">
-           
             <div className="col-md-4 offset-md-4">
             {res['401'] && <div class="alert alert-danger" role="alert">
                 {res['401']}
@@ -48,7 +42,7 @@ export default function Login(props){
                 </div>
             </div>
             </div>
-            </div>
+           
     
 
     )

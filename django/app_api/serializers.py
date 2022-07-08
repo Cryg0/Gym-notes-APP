@@ -7,7 +7,6 @@ class PostSerializer(serializers.ModelSerializer):
         fields=('id','title','author','content','status','published')
 
 
-
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model=Category
@@ -19,10 +18,6 @@ class ExerciseSerializer(serializers.ModelSerializer):
         fields=('id','name','category','weight','sets','reps','workout')
 
 class WorkoutSerializer(serializers.ModelSerializer):
-    # exercises=serializers.SlugRelatedField( many=True,slug_field='name',
-    #                                           queryset=Exercise.objects.filter(workout=1))
-    # exercises=ExerciseSerializer(many=True)
-
     class Meta:
         model=Workout
         fields=('id','name','date','user','status')

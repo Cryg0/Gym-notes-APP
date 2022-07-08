@@ -4,41 +4,60 @@ import axios from 'axios'
 import {Link} from 'react-router-dom'
 import WorkoutUpdate from './WorkoutUpdate'
 import AuthContext from './context/AuthContext'
+import ReactPaginate from 'react-paginate'
 
 
 const Swal = require('sweetalert2')
-const baseUrl = 'http://127.0.0.1:8000/api'
+
 
 export default function Workouts() {
-    let {authTokens,logoutUser}=React.useContext(AuthContext)
-    
+let {authTokens,logoutUser}=React.useContext(AuthContext)
+const [page,setPage]=React.useState(1)
+const [pageF,setPageF]=React.useState(1)
+const [isClicked, setIsClicked] = React.useState(false)
+const handlePopup = () => {setIsClicked(prev => !prev)}
+const [isClicked2,setIsClicked2] = React.useState(false)
 
-
-  const [isClicked, setIsClicked] = React.useState(false)
-  const handlePopup = () => {setIsClicked(prev => !prev)}
-  const [isClicked2,setIsClicked2] = React.useState(false)
-
-  const [workoutsData,setWorkoutsData] = React.useState([{
+const [activeWorkoutsData,setActiveWorkoutsData] = React.useState({'data':[{
     'name':'',
     'date':'',
     'user':'',
     'status':'',
-    'exercises':''
-}])
+    'exercises':''}]
+})
+
+const [finishedWorkoutsData,setFinishedWorkoutsData] = React.useState({'data':[{
+    'name':'',
+    'date':'',
+    'user':'',
+    'status':'',
+    'exercises':''}]
+})
 
 React.useEffect(()=>{
-  axios.get(baseUrl+'/workouts/',
-  {headers:{'Authorization':'JWT '+String(authTokens.access)}}
+    axios.get('/workouts/?page='+pageF+"&&sort=finished")
+    .then((response)=>{
+      if (response.status ===200){
+          setFinishedWorkoutsData(response.data)
+      }else if (response.statusText === 'Unauthorized'){
+          logoutUser()
+  }
+  } );
+  },[pageF,isClicked,isClicked2] );  
+  
 
-   ).then((response)=>{
+
+
+React.useEffect(()=>{
+  axios.get('/workouts/?page='+page+"&&sort=active")
+  .then((response)=>{
     if (response.status ===200){
-  setWorkoutsData(response.data)
-}else if (response.statusText === 'Unauthorized'){
- logoutUser()
+        setActiveWorkoutsData(response.data)
+    }else if (response.statusText === 'Unauthorized'){
+        logoutUser()
 }
 } );
-},[isClicked2,isClicked] );  
-
+},[page,isClicked,isClicked2] );  
 
 
 const [workoutId,setWorkoutId] = React.useState('')
@@ -62,20 +81,12 @@ const deleteWorkout=(workoutId)=>{
       }).then((result) => {
         if (result.isConfirmed) {
             try{
-                axios.delete(baseUrl+'/workouts/'+workoutId+'/',
-                {headers:{'Authorization':'JWT '+String(authTokens.access)}})
+                axios.delete('/workouts/'+workoutId+'/')
                 .then((res)=>{
                     Swal.fire({
                         title:'Sucess',text:'Exercise has been deleted',
                         timer: 1000,position: 'top-right'})
-                    try{
-                        axios.get(baseUrl+'/workouts/',{headers:{'Authorization':'JWT '+String(authTokens.access)}}
-                        ).then((response)=>{
-                        setWorkoutsData(response.data)
-                      } );
-                    }catch(error){
-                        console.log(error)
-                    }
+                    
 
                 });
             }catch(error){
@@ -86,6 +97,15 @@ const deleteWorkout=(workoutId)=>{
         })
       }
 
+
+const handlePageClick = (data,status)=>{
+    if (status==='finished'){
+        setPageF(data.selected+1)
+    }
+    else if (status==='active'){
+        setPage(data.selected+1)
+    }
+}
 
   return (
     <div className='container'>
@@ -111,7 +131,7 @@ const deleteWorkout=(workoutId)=>{
                 </tr>
             </thead>
             <tbody>
-              {workoutsData.map((workout,index)=>{
+              {activeWorkoutsData.data.map((workout,index)=>{
                 if (workout.status === 'active') {
                     return (
                      <tr key={index}className="border-bottom bg-white">
@@ -134,6 +154,27 @@ const deleteWorkout=(workoutId)=>{
             
               }
                )}
+
+      
+        <ReactPaginate
+        previousLabel={'previous'}
+        nextLabel={'next'}
+        breakLabel={'...'}
+        pageCount={activeWorkoutsData.last_page}
+        onPageChange={(event)=>handlePageClick(event,'active')}
+        containerClassName={'pagination justify-content-center'}
+        pageClassName={'page-item'}
+        pageLinkClassName={'page-link'}
+        previousClassName={'page-item'}
+        previousLinkClassName={'page-link'}
+        nextClassName={'page-item'}
+        nextLinkClassName={'page-link'}
+        breakLinkClassName={'page-link'}
+        activeClassName={'active'}
+
+
+        />
+        
              
             </tbody>
         </table>
@@ -152,8 +193,8 @@ const deleteWorkout=(workoutId)=>{
                 </tr>
             </thead>
             <tbody>
-              {workoutsData.map((workout,index)=>{
-                if (workout.status==='finished')
+              {finishedWorkoutsData.data.map((workout,index)=>{
+            
                 return (
                 <tr  key ={index}className="border-bottom bg-white">
                     <td className="row">
@@ -174,6 +215,26 @@ const deleteWorkout=(workoutId)=>{
                 </tr>
               )})}
              
+             <ReactPaginate
+        previousLabel={'previous'}
+        nextLabel={'next'}
+        breakLabel={'...'}
+        pageCount={finishedWorkoutsData.last_page}
+        onPageChange={(event)=>handlePageClick(event,'finished')}
+        containerClassName={'pagination justify-content-center'}
+        pageClassName={'page-item'}
+        pageLinkClassName={'page-link'}
+        previousClassName={'page-item'}
+        previousLinkClassName={'page-link'}
+        nextClassName={'page-item'}
+        nextLinkClassName={'page-link'}
+        breakLinkClassName={'page-link'}
+        activeClassName={'active'}
+
+
+        />    
+      
+        
             </tbody>
         </table>
        

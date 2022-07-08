@@ -2,12 +2,10 @@ import React from "react";
 import axios from 'axios'
 import AuthContext from "./context/AuthContext";
 
-const baseUrl = 'http://127.0.0.1:8000/api'
-
 
 const WorkoutUpdate = props => {
 
-  const { authTokens, user } = React.useContext(AuthContext)
+  const { user } = React.useContext(AuthContext)
   const [workoutData, setWorkoutData] = React.useState({
     'name': '',
     'date': '',
@@ -33,10 +31,8 @@ const WorkoutUpdate = props => {
     workoutForm.append('status', workoutData.status)
 
     
-    try {
-      axios.put(baseUrl + "/workouts/" + props.workout + '/', workoutForm,
-        { headers: { 'Authorization': 'JWT ' + String(authTokens.access) } }
-      )
+    
+      axios.put("/workouts/" + props.workout + '/', workoutForm)
         .then((res) => {
           if (res.status === 200) {
             const Swal = require('sweetalert2')
@@ -46,23 +42,20 @@ const WorkoutUpdate = props => {
               icon: 'success',
               title: 'Workout details updated',
               showConfirmButton: false,
-              timeProgressBar: true,
               timer: 1500
             })
             props.handleClose()
           }
-        })
-    } catch (error) {
-      console.log(error)
-    }
+        }).catch ((error)=>{ console.log(error)}) 
+     
+    
 
 
 
   }
   React.useEffect(() => {
     try {
-      axios.get(baseUrl + '/workouts/' + props.workout + '/',
-        { headers: { 'Authorization': 'JWT ' + String(authTokens.access) } })
+      axios.get('/workouts/' + props.workout + '/')
         .then((res) => {
           setWorkoutData(res.data);
         });

@@ -1,28 +1,18 @@
 import React from "react";
-
 import axios from 'axios'
 
-
-
-
-const baseUrl='http://127.0.0.1:8000/api'
-
-
 const ExerciseUpdate = props => {
-       
-
-    const [exerciseData,setExerciseData]=React.useState([{
-        "id": '',
-        "name": "",
-        "weight": "",
-        "sets": "",
-        "reps": "",
-        "workout":''
-        }])
+const [exerciseData,setExerciseData]=React.useState([{
+  "id": '',
+  "name": "",
+  "weight": "",
+  "sets": "",
+  "reps": "",
+  "workout":''
+  }])
         
     
-  const handleChange=(event)=>{
-  
+const handleChange=(event)=>{
   setExerciseData({
     ...exerciseData,
     [event.target.name]:event.target.value
@@ -40,11 +30,7 @@ const ExerciseUpdate = props => {
   
 
   try{
-  axios.put(baseUrl+"/exercises/"+props.exercise+'/',exerciseForm,{
-    headers :{
-      'content-type':'multipart/form-data'
-    }
-  })
+  axios.put("/exercises/"+props.exercise+'/',exerciseForm)
   .then((res)=>{
     if(res.status===200){
     const Swal = require('sweetalert2')
@@ -73,7 +59,7 @@ const ExerciseUpdate = props => {
   
   React.useEffect(()=>{
     try{
-    axios.get(baseUrl+'/exercises/'+props.exercise+'/')
+    axios.get('/exercises/'+props.exercise+'/')
     .then((res)=>{
         setExerciseData(res.data);
     });

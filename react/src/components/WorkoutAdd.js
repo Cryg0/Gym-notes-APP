@@ -4,12 +4,6 @@ import Creatable from 'react-select/creatable'
 import AuthContext from "./context/AuthContext";
 
 
-
-
-const baseUrl='http://127.0.0.1:8000/api'
-
-
-
 const WorkoutAdd = props => {
 
   let {user,authTokens}=React.useContext(AuthContext)
@@ -53,18 +47,12 @@ const WorkoutAdd = props => {
      
     }
     const names= [selectedValues.map((data)=>(data.value))]
-    
-
-
-
     const [workoutData,setWorkoutData] = React.useState({
       'name':'',
       'date':'',
     
     })
     
-
-
 const handleChange=(event)=>{
 
   setWorkoutData({
@@ -76,58 +64,37 @@ const handleChange=(event)=>{
 const formSubmit=()=>{
     
     const workoutForm = new FormData()
-    const exerciseForm = new FormData()
-    exerciseForm.append('data',names)
     workoutForm.append('name',workoutData.name)
     workoutForm.append('date',workoutData.date)
     workoutForm.append('user',user.user_id)
+    workoutForm.append('exercises',names)
     workoutForm.append('status','active')
 
     
 try{
-  axios.post(baseUrl+"/workouts/",workoutForm,{headers:{'Authorization':'JWT '+String(authTokens.access)}}
-   
-  )
+  axios.post("/workouts/",workoutForm)
   .then((res)=>{
-    if(res){
-      const pk=res.data
-      exerciseForm.append('pk',pk)
-      exerciseSubmit(pk)
-    }
+    if(res.status===201){
+      const Swal = require('sweetalert2')
+      Swal.fire({
+          position: 'top-right',
+          toast:true,
+          icon: 'success',
+          title: 'Workout has been created',
+          showConfirmButton: false,
+          timer: 1500
+      })
+      
+      props.handleClose()
+     
+  
+      }
   })
+ 
 }catch(error){
   console.log(error)
 }
 
-function exerciseSubmit(){
-try{
-  axios.post(baseUrl+"/data/",exerciseForm,{headers:{'Authorization':'JWT '+String(authTokens.access)}},{
-    headers :{
-      'content-type':'multipart/form-data'
-    }
-  })
-  .then((res)=>{
-    if(res.status===200){
-    const Swal = require('sweetalert2')
-    Swal.fire({
-        position: 'top-right',
-        toast:true,
-        icon: 'success',
-        title: 'Workout has been created',
-        showConfirmButton: false,
-        timer: 1500
-    })
-    props.handleClose()
-    
-   
-
-    }
-  })
-}catch(error){
-  console.log(error)
-}
-
-}
 
 }
 
@@ -135,7 +102,7 @@ try{
 
 
   return (
-    <div className="popup-box">
+    <div className="popup-box" >
       <div className="box">
         <span className="close-icon" onClick={props.handleClose}>x</span>
         {props.content}

@@ -4,11 +4,9 @@ import jwt_decode from "jwt-decode";
 
 
 
-
-
  const AuthContext = createContext()
-
  export default AuthContext;
+
 
  export const AuthProvider = ({children}) => {
 
@@ -19,15 +17,20 @@ import jwt_decode from "jwt-decode";
     const [loading,setLoading] = useState(true)
     const [res,setRes]=useState({})
     
+    
+    axios.defaults.baseURL='http://127.0.0.1:8000/api/'
+    if (user) { axios.defaults.headers.common['Authorization']='JWT '+authTokens?.access}
+    axios.defaults.headers.common['Content-Type']='application/json'
+    
 
     let loginUser=  (e)=>{
         e.preventDefault()
        
+    
        
-         axios.post('http://127.0.0.1:8000/api/token/',{'email':e.target.email.value,'password':e.target.password.value},{
-            headers:{'Content-Type':'application/json'}
-        
-        }).then((response)=>{
+         axios.post('/token/',{'email':e.target.email.value,
+            'password':e.target.password.value})
+            .then((response)=>{
 
             if (response.status === 200){
                 setAuthTokens(JSON.stringify(response.data))
@@ -49,7 +52,7 @@ import jwt_decode from "jwt-decode";
     let logoutUser = ()=>{
         setAuthTokens(null)
         setUser(null)
-        axios.post('http://127.0.0.1:8000/api/user/logout/blacklist/',{"refresh":authTokens.refresh})
+        axios.post('/logout/blacklist/',{"refresh":authTokens.refresh})
 
 
         localStorage.removeItem('authTokens')
@@ -60,10 +63,8 @@ import jwt_decode from "jwt-decode";
     let updateToken = ()=>{
         
 
-        axios.post('http://127.0.0.1:8000/api/token/refresh/',{'refresh':authTokens?.refresh},{
-            headers:{'Content-Type':'application/json'}
-        
-        }).then((response)=>{
+        axios.post('/token/refresh/',{'refresh':authTokens?.refresh})
+        .then((response)=>{
 
             if (response.status === 200){
                 setAuthTokens(response.data)

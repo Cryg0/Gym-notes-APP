@@ -2,12 +2,11 @@ import React from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom';
 
-const baseUrl='http://127.0.0.1:8000/api/'
+
 
 
 export default function Register(){
     
-
     const [userData,setUserData]=React.useState({
         'email':'',
         'username':'',
@@ -15,7 +14,7 @@ export default function Register(){
         
     })
 
-  const [res,setRes]=React.useState({})
+    const [res,setRes]=React.useState({})
     const handleChange=(event)=>{
         setUserData({
             ...userData,
@@ -33,7 +32,8 @@ export default function Register(){
         
 
         
-        axios.post(baseUrl+'user/register/',userFormData).then((response) =>{
+        axios.post('/user/register/',userFormData).
+        then((response) =>{
             if (response.status===201){
                 
                 setRes({'201':'Account created'})
@@ -96,12 +96,12 @@ export default function Register(){
                 </div>
                 <div className="col-sm-6 mb-3">
                     <label>Current Password</label>
-                    <input value={userData.password} type="password" name="i" id="cpwd" className="input-field"/>
+                    <input onChange={handleChange} value={userData.password} type="password" name="i" id="cpwd" className="input-field"/>
                 </div>
             </div>
             <div className="mb-3">
                 <label className="option">I agree to the <Link to='#'>Terms and Conditions</Link>
-                    <input type="checkbox" checked/>
+                    <input type="checkbox" />
                     <span className="checkmark"></span>
                 </label>
             </div>

@@ -46,10 +46,6 @@ class User(AbstractBaseUser,PermissionsMixin):
 
 class Profile(models.Model):
 
-   
-
-
-
     user=models.OneToOneField(
         User,
         on_delete=models.CASCADE,
@@ -57,7 +53,6 @@ class Profile(models.Model):
 
     )
     
-   
     picture=models.ImageField(
         'photo',
         default='user/profile/default.png',

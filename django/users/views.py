@@ -35,7 +35,6 @@ class BlackListTokenView(APIView):
     permission_classes=[AllowAny]
 
     def post(self,request):
-        print('worked')
         try:
             refresh_token=request.data['refresh']
             token= RefreshToken(refresh_token)

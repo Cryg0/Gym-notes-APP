@@ -1,3 +1,4 @@
+import numbers
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin,BaseUserManager
@@ -63,4 +64,5 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
- 
+    height=models.DecimalField(null=True,decimal_places=2,max_digits=3)
+    weight=models.IntegerField(null=True)

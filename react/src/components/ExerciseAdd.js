@@ -34,7 +34,7 @@ try{
   axios.post("/exercises/",exerciseForm)
   .then((res)=>{
     if(res.status===201){
-     console.log('ok')
+    
     
      props.handleClose()
      

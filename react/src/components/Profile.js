@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React from 'react'
-import AuthContext from './context/AuthContext'
+
 import ProfileEdit from './ProfileEdit.'
 import Chart from 'react-apexcharts'
 
@@ -11,6 +11,8 @@ export default function Profile(){
     const [isClicked,setIsClicked]=React.useState(false)
     const handlePopup = () => {setIsClicked(prev => !prev)}
     const [profileData,setProfileData]= React.useState({'user':{},'picture':''})
+    const [exercises,setExercises] = React.useState([])
+    const[charSelect,setCharSelect]=React.useState('Bench press')
 
     
 
@@ -26,7 +28,7 @@ export default function Profile(){
         series: [
           {
             name: "series-1",
-            weight: []
+            data: []
           }
         ]
       
@@ -35,23 +37,15 @@ export default function Profile(){
 
     React.useEffect(()=>{
         try{
-            axios.get("chart-data/")
+            axios.get("chart-data/?exercise="+charSelect)
             .then((response)=>{
                 setState(response.data)
 
-            })
+        })
         }catch(error){
             console.log(error)
         }
-    },[isClicked])
-
-
-
-
-
-
-
-
+    },[charSelect])
 
 
     React.useEffect(()=>{
@@ -66,16 +60,27 @@ export default function Profile(){
     },[isClicked])
 
 
+    React.useEffect(()=>{
+        axios.get('/exercises/')
+        .then((response)=>{
+            setExercises(response.data.data)
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+    },[])
+
+
+    const handleChange=(e)=>{
+        setCharSelect(e.target.value)
+    }
+
 return(
 <div className="container">
     <div className="row">
         <div className="col-12 p-0">
             <nav aria-label="breadcrumb ">
-                <ol className="breadcrumb py-3 px-3">
-                    <li className="breadcrumb-item"><a href="#">Home</a></li>
-                    <li className="breadcrumb-item"><a href="#">Library</a></li>
-                    <li className="breadcrumb-item active" aria-current="page">Data</li>
-                </ol>
+                
             </nav>
         </div>
         <div className="col-md-5">
@@ -98,24 +103,21 @@ return(
                 <div className="col-12 bg-white p-0 px-2 pb-3 mb-3">
                     <div className="d-flex justify-content-between border-bottom py-2 px-3">
                         <p><span className="fas fa-globe me-2"></span>Total finished workouts</p>
-                        <a href="#">{profileData.user.total_workouts}</a>
+                        <a>{profileData.user.total_workouts}</a>
                     </div>
                     <div className="d-flex justify-content-between border-bottom py-2 px-3">
-                        <p><span className="fab fa-github-alt me-2"></span>gkfgh</p>
-                        <a href="">bootdey</a>
+                        <p><span className="fab fa-github-alt me-2"></span>Body weight</p>
+                        <a >{profileData.weight} kg</a>
                     </div>
                     <div className="d-flex justify-content-between border-bottom py-2 px-3">
-                        <p><span className="fab fa-twitter me-2"></span>Twitter</p>
-                        <a href="">@bootdey</a>
+                        <p><span className="fab fa-twitter me-2"></span>Body height</p>
+                        <a >{profileData.height} m</a>
                     </div>
                     <div className="d-flex justify-content-between border-bottom py-2 px-3">
-                        <p><span className="fab fa-instagram me-2"></span>Instagram</p>
-                        <a href="">bootdey</a>
+                        <p><span className="me-2"></span>Goals</p>
+                        <a ></a>
                     </div>
-                    <div className="d-flex justify-content-between py-2 px-3">
-                        <p><span className="fab fa-facebook-f me-2"></span>facebook</p>
-                        <a href="">bootdey</a>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -123,72 +125,54 @@ return(
             <div className="row">
                 <div className="col-12 bg-white px-3 mb-3 pb-3">
                     <div className="d-flex align-items-center justify-content-between border-bottom">
-                        <p className="py-2">Full Name</p>
+                        <p className="py-2">First name</p>
                         <p className="py-2 text-muted">{profileData.user.first_name}</p>
                     </div>
                     <div className="d-flex align-items-center justify-content-between border-bottom">
                         <p className="py-2">Email</p>
                         <p className="py-2 text-muted">{profileData.user.email}</p>
                     </div>
-                    <div className="d-flex align-items-center justify-content-between border-bottom">
-                        <p className="py-2">Phone</p>
-                        <p className="py-2 text-muted">(239) 816-9029</p>
-                    </div>
-                    <div className="d-flex align-items-center justify-content-between border-bottom">
-                        <p className="py-2">Mobile</p>
-                        <p className="py-2 text-muted">(320) 380-4539</p>
-                    </div>
-                    <div className="d-flex align-items-center justify-content-between">
-                        <p className="py-2">Address</p>
-                        <p className="py-2 text-muted"> Soma,San Francisco,CA</p>
-                    </div>
+                   
                 </div>
-
-
-
-
-
-
-                <Chart
-                options={state.options}
-                series={state.series}
-                type="line"
-                width="500"
-                
-                />
 
                 <div className="col-12 bg-white px-3 pb-2">
                     <h6 className="d-flex align-items-center mb-3 fw-bold py-3"><i
-                        className="text-info me-2">assignment</i>Project
-                        Status</h6>
-                    <small>Web Design</small>
+                        className="text-info me-2">Goals</i>
+                        </h6>
+                    <small>Bench press</small>
                     <div className="progress mb-3" style={{ height: "5px" }}>
                         <div className="progress-bar bg-primary" role="progressbar" style={{ width: "60%" }}
                             aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
-                    <small>One Page</small>
+                    <small>Body weight</small>
                     <div className="progress mb-3" style={{ height: "5px" }}>
                         <div className="progress-bar bg-primary" role="progressbar" style={{ width: "72%" }}
                             aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
-                    <small>Mobile Template</small>
-                    <div className="progress mb-3" style={{ height: "5px" }}>
-                        <div className="progress-bar bg-primary" role="progressbar" style={{ width: "50%" }}
-                            aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <small>Backend API</small>
-                    <div className="progress mb-3" style={{ height: "5px" }}>
-                        <div className="progress-bar bg-primary" role="progressbar" style={{ width: "90%" }}
-                            aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <small>Website Markup</small>
-                    <div className="progress mb-3" style={{ height: "5px" }}>
-                        <div className="progress-bar bg-primary" role="progressbar" style={{ width: "80%" }}
-                            aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
+                    
                 </div>
             </div>
         </div>
+
+
+        
+    </div>
+    <div className='row'>
+   <h3 className='mt-3 mb-3'>Chart for {charSelect}</h3>
+  <select  onChange = {handleChange}className="form-select" aria-label="Default select example">
+  <option defaultValue='Bench press'></option>
+  {exercises.map((exercise,index)=>(
+    <option key={index} value={exercise}>{exercise}</option>
+  ))}
+ 
+</select>
+    <Chart
+                options={state.options}
+                series={state.series}
+                type="line"
+                width="700"
+                
+                />
     </div>
 </div>
 )

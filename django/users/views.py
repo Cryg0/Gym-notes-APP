@@ -58,19 +58,21 @@ class UserProfile(APIView):
     
     def put(self,request):
         data=request.data
-        print(data)
+        
         user=request.user
 
         user.first_name=data["first_name"]
         user.save()
 
         profile=user.profile
+        profile.weight=data['weight']
+        profile.height=data['height']
        
         profile.picture=data['picture']
         profile.save()
         serializer=UserSerializer(user)
         serializer1=ProfileSerializer(profile)
-        return Response((serializer.data,serializer1.data))
+        return Response([serializer.data,serializer1.data])
 
        
     

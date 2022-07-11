@@ -11,7 +11,8 @@ const Swal = require('sweetalert2')
 
 
 export default function Workouts() {
-let {authTokens,logoutUser}=React.useContext(AuthContext)
+const [load,setLoad]=React.useState('false')
+let {logoutUser}=React.useContext(AuthContext)
 const [page,setPage]=React.useState(1)
 const [pageF,setPageF]=React.useState(1)
 const [isClicked, setIsClicked] = React.useState(false)
@@ -40,10 +41,12 @@ React.useEffect(()=>{
       if (response.status ===200){
           setFinishedWorkoutsData(response.data)
       }else if (response.statusText === 'Unauthorized'){
+        
+
           logoutUser()
   }
   } );
-  },[pageF,isClicked,isClicked2] );  
+  },[pageF,isClicked,isClicked2,logoutUser] );  
   
 
 
@@ -53,11 +56,12 @@ React.useEffect(()=>{
   .then((response)=>{
     if (response.status ===200){
         setActiveWorkoutsData(response.data)
+        setLoad(false)
     }else if (response.statusText === 'Unauthorized'){
         logoutUser()
 }
 } );
-},[page,isClicked,isClicked2] );  
+},[page,isClicked,isClicked2,load,logoutUser] );  
 
 
 const [workoutId,setWorkoutId] = React.useState('')
@@ -86,7 +90,7 @@ const deleteWorkout=(workoutId)=>{
                     Swal.fire({
                         title:'Sucess',text:'Exercise has been deleted',
                         timer: 1000,position: 'top-right'})
-                    
+                    setLoad(true)
 
                 });
             }catch(error){
@@ -131,9 +135,9 @@ const handlePageClick = (data,status)=>{
                 </tr>
             </thead>
             <tbody>
-              {activeWorkoutsData.data.map((workout,index)=>{
-                if (workout.status === 'active') {
-                    return (
+              {activeWorkoutsData.data.map((workout,index)=>(
+                
+                   
                      <tr key={index}className="border-bottom bg-white">
                     <td className="row">
                         <div className="d-flex align-items-center">
@@ -150,9 +154,9 @@ const handlePageClick = (data,status)=>{
                     <i onClick ={()=>handlePopup1(workout.id)} className="bi bi-pencil-square"></i>                    
                     </td>
                 </tr>
-              )}
+              )
             
-              }
+              
                )}
 
       
@@ -162,7 +166,7 @@ const handlePageClick = (data,status)=>{
         breakLabel={'...'}
         pageCount={activeWorkoutsData.last_page}
         onPageChange={(event)=>handlePageClick(event,'active')}
-        containerClassName={'pagination justify-content-center'}
+        containerClassName={'pagination  justify-content-center'}
         pageClassName={'page-item'}
         pageLinkClassName={'page-link'}
         previousClassName={'page-item'}

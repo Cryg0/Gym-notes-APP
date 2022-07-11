@@ -49,10 +49,11 @@ import jwt_decode from "jwt-decode";
     }
 
 
+
     let logoutUser = ()=>{
         setAuthTokens(null)
         setUser(null)
-        axios.post('/logout/blacklist/',{"refresh":authTokens.refresh})
+        axios.post('/user/logout/blacklist/',{"refresh":authTokens.refresh})
 
 
         localStorage.removeItem('authTokens')

@@ -30,12 +30,7 @@ class Post(models.Model):
     def __str__(self) -> str:
         return self.title
 
-
-
-
-
 #Main models
-
 
 class Category(models.Model):
     part=models.CharField(max_length=100)
@@ -44,16 +39,14 @@ class Category(models.Model):
         return self.part
 
 class Exercise(models.Model):
-    name=models.CharField(max_length=100)
+    name=models.CharField(max_length=100,null=False)
     category=models.ForeignKey(Category,on_delete=models.SET_NULL,null=True)
     weight=models.IntegerField(default=0)
     sets=models.IntegerField(default=0)
     reps=models.IntegerField(default=0)
-    workout=models.ForeignKey('Workout',on_delete=models.CASCADE)
+    workout=models.ForeignKey('Workout',on_delete=models.CASCADE,related_name='exercises')
     
     
-
-
     def __str__(self) -> str:
         return self.name
 

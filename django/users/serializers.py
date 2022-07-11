@@ -40,5 +40,5 @@ class ProfileSerializer(serializers.ModelSerializer):
     user=UserSerializer()
     class Meta:
         model=Profile
-        fields=('user','picture')
+        fields=('user','picture','weight','height')
         depth=1

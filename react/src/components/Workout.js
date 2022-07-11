@@ -17,7 +17,7 @@ const [isClicked1, setIsClicked1] = React.useState(false)
 
 React.useEffect(()=>{
     try{
-    axios.get('/workoutExercises/'+workoutId).then((response)=>{
+    axios.get('/exercises/?workout_id='+workoutId).then((response)=>{
     setWorkoutData(response.data)
   } );
 }catch(error){
@@ -25,9 +25,6 @@ React.useEffect(()=>{
 }
   },[isClicked1,isClicked] );  
     
- 
-
-
 const [exerciseId,setExerciseId] = React.useState('')
 
   const handlePopup = (exerciseId) => {
@@ -57,13 +54,13 @@ const deleteExercise=(excerciseId)=>{
                         showConfirmButton: false,
                         timer: 1500
                     })
-                    try{
-                        axios.get('/workoutExercises/'+workoutId).then((response)=>{
+                   
+                        axios.get('/exercises/?workout_id='+workoutId).then((response)=>{
                         setWorkoutData(response.data)
-                      } );
-                    }catch(error){
+                      } )
+                    .catch((error)=>{
                         console.log(error)
-                    }
+                    })
 
                 });
             }catch(error){

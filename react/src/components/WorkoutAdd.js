@@ -6,32 +6,32 @@ import AuthContext from "./context/AuthContext";
 
 const WorkoutAdd = props => {
 
-  let {user,authTokens}=React.useContext(AuthContext)
+  let {user}=React.useContext(AuthContext)
   
     const data = [
         {
-          value: "cerulean",
-          label: "cerulean"
+          value: "Bench press",
+          label: "Bench press"
         },
         {
-          value: "fuchsia rose",
-          label: "fuchsia rose"
+          value: "Barbell squats",
+          label: "Barbel squats"
         },
         {
-          value: "true red",
-          label: "true red"
+          value: "Pullover",
+          label: "Pullover"
         },
         {
-          value: "aqua sky",
-          label: "aqua sky"
+          value: "Deadlift",
+          label: "Deadlift"
         },
         {
-          value: "tigerlily",
-          label: "tigerlily"
+          value: "Military press",
+          label: "Military press"
         },
         {
-          value: "blue turquoise",
-          label: "blue turquoise"
+          value: "Legs extentions",
+          label: "Legs extensions"
         }
       ];
     const [selectedValues, setSelectedValues] = React.useState([])
@@ -71,7 +71,7 @@ const formSubmit=()=>{
     workoutForm.append('status','active')
 
     
-try{
+
   axios.post("/workouts/",workoutForm)
   .then((res)=>{
     if(res.status===201){
@@ -91,9 +91,9 @@ try{
       }
   })
  
-}catch(error){
+.catch((error)=>{
   console.log(error)
-}
+})
 
 
 }
@@ -121,7 +121,7 @@ try{
       isClearable
       isMulti
       onChange={(value)=>test('roles',value)}
-      options={data['value']}
+      options={data}
       value={selectedValues}
 
 

@@ -1,5 +1,3 @@
-
-from pkg_resources import working_set
 from rest_framework import generics
 from app.models import *
 from .serializers import *
@@ -16,8 +14,8 @@ import math
 
 permission=[AllowAny]   #[AllowAny]
 
-class PostUserWritePermission(BasePermission):
-    message='Editing posts is restricted to the author only'
+class UserWritePermission(BasePermission):
+    message='Editing object is restricted to the author only'
     
     def  has_object_permission(self, request, view, obj):
 
@@ -32,7 +30,7 @@ class PostList(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
-class PostDetail(generics.RetrieveUpdateDestroyAPIView,PostUserWritePermission):
+class PostDetail(generics.RetrieveUpdateDestroyAPIView,UserWritePermission):
 
     permission_classes=permission
     queryset=Post.objects.all()
@@ -62,8 +60,8 @@ class WorkoutList(APIView):
     
     def get(self, request):
         user = request.user
-        items=Workout.objects.all()
-        # items = user.workout_set.all()
+       
+        items = user.workout_set.all()
         total=items.count()
 
         # Filtering data by querry
@@ -99,7 +97,7 @@ class WorkoutList(APIView):
    
 
  
-class WorkoutDetail(generics.RetrieveUpdateDestroyAPIView,PostUserWritePermission):
+class WorkoutDetail(generics.RetrieveUpdateDestroyAPIView):
 
     permission_classes=permission  
     queryset=Workout.objects.all()
@@ -124,11 +122,47 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 
 
-class ExerciseList(generics.ListCreateAPIView):
-
+class ExerciseList(APIView):  
     permission_classes=permission
-    queryset = Exercise.objects.all()
     serializer_class = ExerciseSerializer
+
+    def get(self, request):
+
+        workout_id=request.GET.get('workout_id')
+
+        if workout_id:
+            workout=Workout.objects.get(pk=workout_id)
+            exercises=Exercise.objects.filter(workout=workout)
+            serializer=ExerciseSerializer(exercises,many=True)
+           
+            return Response(serializer.data)
+            
+        user = request.user
+        workouts = user.workout_set.all().filter(status='finished')
+
+        exercises=[]
+    
+        for workout in workouts:
+            for exercise in workout.exercises.all():
+                exercises.append(exercise.name)
+        
+        unique_exercises=list(set(exercises))   #unique exercises names
+    
+
+        return Response({'data':unique_exercises})
+    
+    
+    def post(self,request):
+        serializer = ExerciseSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+
+            return Response(status=status.HTTP_201_CREATED)
+        return Response (serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+    
 
 class ExerciseDetail(generics.RetrieveUpdateDestroyAPIView):
 
@@ -136,48 +170,47 @@ class ExerciseDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Exercise.objects.all()
     serializer_class = ExerciseSerializer
 
-class WorkoutExercises(generics.ListCreateAPIView):
-
-    permission_classes=permission
-    queryset = Exercise.objects.all()
-    serializer_class = ExerciseSerializer
-
-    def get_queryset(self):
-        
-        workout_id=self.kwargs['workout_id']
-        workout=Workout.objects.get(pk=workout_id)
-       
-        return Exercise.objects.filter(workout=workout)
-
-
-class ExercisesList(generics.ListCreateAPIView):
-    permission_classes=permission
-    serializer_class = ExerciseSerializer
-
-
-
-
 class ChartsData(APIView):
      def get(self, request):
-        # user = request.user
-        user=User.objects.get(pk=1)
+        user = self.request.user
         workouts=user.workout_set.all().filter(status='finished')
         
         exercises=[]
-        for workout in workouts:
-            exercises.extend(Exercise.objects.filter(workout=workout,name='Bench press'))
-        print(exercises)
 
+        name=request.GET.get('exercise')
+        for workout in workouts:
+           exercises.extend(workout.exercises.all().filter(name=name))
+           
         date=[]
         weight=[]
 
         for exercise in exercises:
-            date.append(exercise.workout.date)
+            date.append(exercise.workout.date.strftime("%d/%B/%Y"))
             weight.append(exercise.weight)
 
-        print(date,weight)
+        data={
+        'options': {
+          'chart': {
+            'id': "basic-bar",
+            'height':'auto'
+            
+          },
+          'xaxis': {
+            'type':"category",
+            'categories': date,
+            'labels':{
+                'show':True
+            }
+          }
+        },
+        'series': [
+          {
+            'name': "Weight",
+            'data': weight
+          }
+        ]
+      
+    }
 
-        
-        # serializer = WorkoutSerializer(items, many=True)     
-        
-        return Response(data={'date':date,'weight':weight})
+
+        return Response(data)

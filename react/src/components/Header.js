@@ -1,134 +1,73 @@
+import AuthContext from './context/AuthContext'
 import React from 'react'
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom'
 
-export default function Header(){
+export default function Header2(){
 
-    const [isWide,setIsWide] = React.useState(false)
+let {user,logoutUser}= React.useContext(AuthContext)
 
-    function handleClick(){
-        
-        setIsWide(prev =>!prev)
-    }
+return (
+  <nav className="navbar sticky-top navbar-expand-lg navbar-light bg-light " >
+    <div className="container-fluid">
+      <a className="navbar-brand" href="/"><img className="navbar-logo" src="./logo.jfif" alt="logo" /></a>
+      <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span className="navbar-toggler-icon"></span>
+      </button>
+      <div className="collapse navbar-collapse" id="navbarSupportedContent">
 
-    const [isDark,setIsDark]= React.useState(false)
+        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+          <li className="nav-item">
+            <a className="nav-link active" aria-current="page" >Note your workouts</a>
+          </li>
 
-    function handleClick2() {
-        setIsDark(prev =>!prev)
-    }
- 
+          <li className="nav-item ">
+            <Link className="nav-link" to="/">Workouts</Link>
+          </li>
+        </ul>
 
-    return (<div>
 
-<meta charSet="UTF-8"/>
-    <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    
-   
-   
-    
-   
-    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'/>
-    
-<title>Dashboard Sidebar Menu</title>
-        <body className={isDark ? "dark" : "white" }>
-        <nav className={isWide ? "sidebar" : "sidebar close" }>
-        <header>
-            <div className="image-text">
-                <span className="image">
-                    <img src="logo2.jpg" alt=""/>
-                </span>
+        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
 
-                <div className="text logo-text">
-                    <span className="name">Codinglab</span>
-                    <span className="profession">Web developer</span>
-                </div>
-            </div>
 
-            <i  onClick={handleClick}className='bx bx-chevron-right toggle' > </i>
-        </header>
+          <li className="nav-item ">
+            <form className="d-flex"  >
+              <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+              <button className="btn btn-outline-success" type="submit">Search</button>
+            </form>
 
-        <div className="menu-bar">
-            <div className="menu">
+          </li>
+        </ul>
 
-                <li className="search-box">
-                    <i className='bx bx-search icon'></i>
-                    <input type="text" placeholder="Search..."/>
-                </li>
+        {user == null &&
+          <ul className="navbar-nav ms-auto mb-5 mb-lg-0">
+            <li className="nav-item">
+              <Link className="nav-link " href="/login" tabIndex="-1" aria-disabled="true">Login</Link>
+            </li>
+          </ul>
+        }
 
-                <ul className="menu-links">
-                    <li className="nav-link">
-                        <a href="/">
-                            <i className='bx bx-home-alt icon' ></i>
-                            <span className="text nav-text">Dashboard</span>
-                        </a>
-                    </li>
 
-                    <li className="nav-link">
-                        <a href="#">
-                            <i className='bx bx-bar-chart-alt-2 icon' ></i>
-                            <span className="text nav-text">Revenue</span>
-                        </a>
-                    </li>
 
-                    <li className="nav-link">
-                        <a href="#">
-                            <i className='bx bx-bell icon'></i>
-                            <span className="text nav-text">Notifications</span>
-                        </a>
-                    </li>
 
-                    <li className="nav-link">
-                        <a href="#">
-                            <i className='bx bx-pie-chart-alt icon' ></i>
-                            <span className="text nav-text">Analytics</span>
-                        </a>
-                    </li>
-
-                    <li className="nav-link">
-                        <a href="#">
-                            <i className='bx bx-heart icon' ></i>
-                            <span className="text nav-text">Likes</span>
-                        </a>
-                    </li>
-
-                    <li className="nav-link">
-                        <a href="/news">
-                            <i className='bx bx-wallet icon' ></i>
-                            <span className="text nav-text">Wallets</span>
-                        </a>
-                    </li>
-
-                </ul>
-            </div>
-
-            <div className="bottom-content">
-                <li className="">
-                    <a href="#">
-                        <i className='bx bx-log-out icon' ></i>
-                        <span className="text nav-text">Logout</span>
-                    </a>
-                </li>
-
-                <li className="mode">
-                    <div className="sun-moon">
-                        <i className='bx bx-moon icon moon'></i>
-                        <i className='bx bx-sun icon sun'></i>
-                    </div>
-                    <span className="mode-text text">{isDark ? "Light mode" :"Dark mode"}</span>
-
-                    <div className="toggle-switch">
-                        <span onClick={handleClick2}className="switch"></span>
-                    </div>
-                </li>
+        {user &&
+          <ul className="navbar-nav ms-auto mb-5 mb-lg-0">
+            <li className="nav-item  dropdown   " >
+              <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {user.username}
+              </a>
+              <ul className="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdown">
+                <li><a className="dropdown-item" href="/profile">Profile</a></li>
                 
-            </div>
-        </div>
+                <li><hr className="dropdown-divider" /></li>
+                <li><a onClick={logoutUser} className="dropdown-item" >Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+        }
 
-    </nav>
-    </body>
-   
-    
+      </div>
+    </div>
+  </nav>
 
- 
-    </div>)
+    )
 }

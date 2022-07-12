@@ -54,6 +54,9 @@ class Profile(models.Model):
 
     )
     
+    
+    height=models.DecimalField(decimal_places=2,max_digits=3,blank=True)
+    weight=models.IntegerField(blank=True)
     picture=models.ImageField(
         'photo',
         default='user/profile/default.png',
@@ -63,6 +66,3 @@ class Profile(models.Model):
    
     def __str__(self):
         return self.user.username
-
-    height=models.DecimalField(null=True,decimal_places=2,max_digits=3)
-    weight=models.IntegerField(null=True)

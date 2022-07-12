@@ -76,7 +76,7 @@ import jwt_decode from "jwt-decode";
                 logoutUser()
             }
         }).catch(error=>{
-            console.log(error)
+            logoutUser()
         })
         if (loading){
             setLoading(false)

@@ -3,8 +3,6 @@ from app.models import *
 from .serializers import *
 from rest_framework.permissions import  SAFE_METHODS,IsAuthenticated, BasePermission,AllowAny
 from rest_framework import status
-from app.models import Exercise
-
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -56,7 +54,7 @@ class WorkoutList(APIView):
 
                
                 return Response(status=status.HTTP_201_CREATED)
-        return Response (serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        return Response (status=status.HTTP_400_BAD_REQUEST)
     
     def get(self, request):
         user = request.user
@@ -67,16 +65,16 @@ class WorkoutList(APIView):
         # Filtering data by querry
         if 'results' in request.GET:
             limit=int(self.request.GET['results'])
-            items=Workout.objects.all().order_by('-date')[:limit]
+            items=user.workout_set.all().order_by('-date')[:limit]
         
         if 'sort' in request.GET:
             sort=request.GET['sort']
                 
             if sort=='finished':
-                items=Workout.objects.filter(status='finished')
+                items=user.workout_set.all().filter(status='finished')
                 total=items.count()
             elif sort=='active':
-                items=Workout.objects.filter(status='active')
+                items=user.workout_set.all().filter(status='active')
                 total=items.count()
                     
         if 'page' in request.GET:

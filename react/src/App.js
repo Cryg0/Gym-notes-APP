@@ -3,7 +3,7 @@ import './App.css';
 import {BrowserRouter,Routes,Route} from 'react-router-dom'
 import Workouts from './components/Workouts';
 import Login from './components/Login';
-import Header2 from './components/Header2';
+import Header from './components/Header';
 import Workout from './components/Workout';
 import Register from './components/Register';
 import PrivateRoutes from './components/PrivateRoute';
@@ -20,7 +20,7 @@ function App() {
     
      
     <BrowserRouter>
-    {user &&<Header2/>}
+    {user &&<Header/>}
       <Routes>
         <Route element ={<PrivateRoutes/>} >
           <Route path='/' element={<Workouts/>}/>

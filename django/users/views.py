@@ -24,8 +24,7 @@ class UserCreate(APIView):
 
             if newuser:
                 
-                profile=Profile.objects.create(user=newuser)
-                profile.save()
+                
 
                 return Response(status=status.HTTP_201_CREATED)
         return Response (serializer.errors,status=status.HTTP_400_BAD_REQUEST)

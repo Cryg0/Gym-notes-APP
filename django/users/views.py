@@ -22,11 +22,7 @@ class UserCreate(APIView):
         if serializer.is_valid():
             newuser=serializer.save()
 
-            if newuser:
-                
-                
-
-                return Response(status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_201_CREATED)
         return Response (serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class BlackListTokenView(APIView):
@@ -69,9 +65,8 @@ class UserProfile(APIView):
        
         profile.picture=data['picture']
         profile.save()
-        serializer=UserSerializer(user)
-        serializer1=ProfileSerializer(profile)
-        return Response([serializer.data,serializer1.data])
+        
+        return Response({"message":"success"})
 
        
     

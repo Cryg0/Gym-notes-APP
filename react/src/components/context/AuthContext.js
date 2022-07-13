@@ -19,7 +19,7 @@ import jwt_decode from "jwt-decode";
     
     
     axios.defaults.baseURL='http://127.0.0.1:8000/api/'
-    if (user) { axios.defaults.headers.common['Authorization']='JWT '+authTokens?.access}
+    axios.defaults.headers.common['Authorization']='JWT '+authTokens?.access
     axios.defaults.headers.common['Content-Type']='application/json'
     
 
@@ -35,13 +35,14 @@ import jwt_decode from "jwt-decode";
             if (response.status === 200){
                 setAuthTokens(JSON.stringify(response.data))
                 setUser(jwt_decode(JSON.stringify(response.data.access)))
+                axios.defaults.headers.common['Authorization']='JWT '+authTokens?.access
                 localStorage.setItem('authTokens',JSON.stringify(response.data))
                 window.location.href='/'
             }else{
                 
             }
         }).catch(error =>{
-            console.log(error.response.data)
+            
            setRes({'401':error.response.data.detail})
         
         })
@@ -106,7 +107,7 @@ import jwt_decode from "jwt-decode";
         },[authTokens,loading])
 
 
-
+ 
     return (
         <AuthContext.Provider value ={contextData}>
             { loading ? null :children}

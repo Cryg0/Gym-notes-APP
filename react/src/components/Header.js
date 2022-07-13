@@ -2,7 +2,7 @@ import AuthContext from './context/AuthContext'
 import React from 'react'
 import {Link} from 'react-router-dom'
 
-export default function Header2(){
+export default function Header(){
 
 let {user,logoutUser}= React.useContext(AuthContext)
 
@@ -17,16 +17,16 @@ return (
 
         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
           <li className="nav-item">
-            <a className="nav-link active" aria-current="page" >Note your workouts</a>
+            <a className="nav-link active" aria-current="page" ><h5>Note your workouts</h5></a>
           </li>
 
           <li className="nav-item ">
-            <Link className="nav-link" to="/">Workouts</Link>
+            <Link className="nav-link ms-5" to="/">Workouts</Link>
           </li>
         </ul>
 
 
-        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+        {/* <ul className="navbar-nav me-auto mb-2 mb-lg-0">
 
 
           <li className="nav-item ">
@@ -36,7 +36,7 @@ return (
             </form>
 
           </li>
-        </ul>
+        </ul> */}
 
         {user == null &&
           <ul className="navbar-nav ms-auto mb-5 mb-lg-0">

@@ -1,4 +1,3 @@
-import numbers
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin,BaseUserManager
@@ -6,7 +5,6 @@ from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin,BaseUse
 
 class CustomAccountManager(BaseUserManager):
     def create_superuser(self,email,username,password,**other_fields):
-
         other_fields.setdefault('is_staff',True)
         other_fields.setdefault('is_superuser',True)
         other_fields.setdefault('is_active',True)
@@ -54,9 +52,8 @@ class Profile(models.Model):
 
     )
     
-    
-    height=models.DecimalField(decimal_places=2,max_digits=3,blank=True)
-    weight=models.IntegerField(blank=True)
+    height=models.DecimalField(decimal_places=2,max_digits=3,blank=True,null=True)
+    weight=models.IntegerField(blank=True,null=True)
     picture=models.ImageField(
         'photo',
         default='user/profile/default.png',

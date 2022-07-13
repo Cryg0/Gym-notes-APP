@@ -12,7 +12,7 @@ export default function Profile(){
     const handlePopup = () => {setIsClicked(prev => !prev)}
     const [profileData,setProfileData]= React.useState({'user':{},'picture':''})
     const [exercises,setExercises] = React.useState([])
-    const[charSelect,setCharSelect]=React.useState('Bench press')
+    const[charSelect,setCharSelect]=React.useState('')
 
     
 

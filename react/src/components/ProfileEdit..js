@@ -18,9 +18,9 @@ const ProfileEdit = props => {
     
   })
   
-  console.log(profileData)
+  
   }
-  console.log(profileData)
+
   const handleFileChange = (event)=>{
     setProfileData({
       ...profileData,

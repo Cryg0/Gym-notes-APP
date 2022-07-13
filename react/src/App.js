@@ -27,7 +27,7 @@ function App() {
           <Route path='/workouts/:workoutId' element={<Workout/>}/>
           <Route path='/profile' element={<Profile/>}/>
         </Route>
-        {user ? <Route path='/' element={<Workouts/>}/> :<Route path='/login' element={<Login/>}/> }
+         <Route path='/login' element={<Login/>}/> 
         <Route path='/register' element={<Register/>}/>
       </Routes>
     </BrowserRouter>

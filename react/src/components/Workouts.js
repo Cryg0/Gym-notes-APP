@@ -24,7 +24,8 @@ const [activeWorkoutsData,setActiveWorkoutsData] = React.useState({'data':[{
     'date':'',
     'user':'',
     'status':'',
-    'exercises':''}]
+    'exercises':''},
+]
 })
 
 const [finishedWorkoutsData,setFinishedWorkoutsData] = React.useState({'data':[{
@@ -40,12 +41,12 @@ React.useEffect(()=>{
     .then((response)=>{
       if (response.status ===200){
           setFinishedWorkoutsData(response.data)
-      }else if (response.statusText === 'Unauthorized'){
+      }
         
-
-          logoutUser()
-  }
-  } );
+  
+  } ).catch(()=>{
+    logoutUser()
+  });
   },[pageF,isClicked,isClicked2,logoutUser] );  
   
 
@@ -57,10 +58,13 @@ React.useEffect(()=>{
     if (response.status ===200){
         setActiveWorkoutsData(response.data)
         setLoad(false)
-    }else if (response.statusText === 'Unauthorized'){
-        logoutUser()
-}
-} );
+    }
+        
+
+} )
+.catch((error)=>{
+    logoutUser()
+});
 },[page,isClicked,isClicked2,load,logoutUser] );  
 
 
@@ -101,7 +105,8 @@ const deleteWorkout=(workoutId)=>{
         })
       }
 
-
+     
+      
 const handlePageClick = (data,status)=>{
     if (status==='finished'){
         setPageF(data.selected+1)
@@ -109,6 +114,7 @@ const handlePageClick = (data,status)=>{
     else if (status==='active'){
         setPage(data.selected+1)
     }
+    
 }
 
   return (

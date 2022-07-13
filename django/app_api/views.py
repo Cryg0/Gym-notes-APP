@@ -62,10 +62,10 @@ class WorkoutList(APIView):
         items = user.workout_set.all()
         total=items.count()
 
-        # Filtering data by querry
-        if 'results' in request.GET:
-            limit=int(self.request.GET['results'])
-            items=user.workout_set.all().order_by('-date')[:limit]
+        # # Filtering data by querry
+        # if 'results' in request.GET:
+        #     limit=int(self.request.GET['results'])
+        #     items=user.workout_set.all().order_by('-date')[:limit]
         
         if 'sort' in request.GET:
             sort=request.GET['sort']

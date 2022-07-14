@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from users.models import User
 
 import math
 
@@ -71,7 +72,7 @@ class WorkoutList(APIView):
             sort=request.GET['sort']
                 
             if sort=='finished':
-                items=user.workout_set.all().filter(status='finished')
+                items=user.workout_set.all().filter(status='finished').order_by('-date')
                 total=items.count()
             elif sort=='active':
                 items=user.workout_set.all().filter(status='active')
@@ -93,15 +94,11 @@ class WorkoutList(APIView):
         
         return Response({'data':serializer.data})
    
-
- 
 class WorkoutDetail(generics.RetrieveUpdateDestroyAPIView):
 
     permission_classes=permission  
     queryset=Workout.objects.all()
     serializer_class=WorkoutSerializer
-
-
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     
@@ -117,8 +114,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
-
-
 
 class ExerciseList(APIView):  
     permission_classes=permission
@@ -160,8 +155,6 @@ class ExerciseList(APIView):
             return Response(status=status.HTTP_201_CREATED)
         return Response (serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-    
-
 class ExerciseDetail(generics.RetrieveUpdateDestroyAPIView):
 
     permission_classes=permission
@@ -169,16 +162,18 @@ class ExerciseDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ExerciseSerializer
 
 class ChartsData(APIView):
-     def get(self, request):
+
+
+    def get(self, request):
         user = self.request.user
         workouts=user.workout_set.all().filter(status='finished')
-        
+
         exercises=[]
 
         name=request.GET.get('exercise')
         for workout in workouts:
-           exercises.extend(workout.exercises.all().filter(name=name))
-           
+            exercises.extend(workout.exercises.all().filter(name=name))
+            
         date=[]
         weight=[]
 
@@ -188,27 +183,51 @@ class ChartsData(APIView):
 
         data={
         'options': {
-          'chart': {
+            'chart': {
             'id': "basic-bar",
             'height':'auto'
             
-          },
-          'xaxis': {
+            },
+            'xaxis': {
             'type':"category",
             'categories': date,
             'labels':{
                 'show':True
             }
-          }
+            }
         },
         'series': [
-          {
+            {
             'name': "Weight",
             'data': weight
-          }
+            }
         ]
-      
-    }
+
+        }
 
 
         return Response(data)
+
+
+class GoalList(APIView):
+    def get(self, request):
+        user = request.user
+        goals=Goal.objects.filter(user=user)
+        serializer=GoalSerializer(goals,many=True)
+       
+        return Response({'data':serializer.data})
+     
+    def post(self,request):
+         
+        serializer = GoalSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        return Response (status=status.HTTP_400_BAD_REQUEST)
+
+class GoalDetail(generics.RetrieveUpdateDestroyAPIView):
+
+    permission_classes=permission  
+    queryset=Goal.objects.all()
+    serializer_class=GoalSerializer

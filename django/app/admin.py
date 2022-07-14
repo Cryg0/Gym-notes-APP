@@ -12,3 +12,4 @@ class AuthorAdmin(admin.ModelAdmin):
 admin.site.register(models.Category)
 admin.site.register(models.Exercise)
 admin.site.register(models.Workout)
+admin.site.register(models.Goal)

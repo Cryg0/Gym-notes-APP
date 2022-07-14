@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import PostList, PostDetail,WorkoutDetail,WorkoutList,ExerciseList,ExerciseDetail,ChartsData
+from .views import PostList, PostDetail,WorkoutDetail,WorkoutList,ExerciseList,ExerciseDetail,ChartsData,GoalList,GoalDetail
+
 
 app_name='app.api'
 
@@ -11,7 +12,10 @@ urlpatterns=[
     path('exercises/',ExerciseList.as_view(),name='exercise-list'),
     path('exercises/<int:pk>/',ExerciseDetail.as_view(),name='exercise-detail'),
     path('exercises/<int:workout_id',ExerciseList.as_view(),name='exercises-list'),
-    path('chart-data/',ChartsData.as_view(),name='chart-data')
+    path('chart-data/',ChartsData.as_view(),name='chart-data'),
+    path('goals/',GoalList.as_view(),name='goals-list'),
+    path('goals/<int:pk>/',GoalDetail.as_view(),name='goal-detail'),
+
     
 
 

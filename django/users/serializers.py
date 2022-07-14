@@ -3,6 +3,7 @@ from users.models import User,Profile
 
 
 
+
 class RegisterUserSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -26,11 +27,14 @@ class RegisterUserSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     total_workouts = serializers.SerializerMethodField()
+   
 
     def get_total_workouts(self, obj):
         workouts = obj.workout_set.all().filter(status='finished').count()
         return workouts
-        
+    
+
+
     class Meta:
         model = User
         fields = ('id','username','first_name','email','about','total_workouts')

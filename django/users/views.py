@@ -46,6 +46,7 @@ class UserProfile(APIView):
     def get(self, request):
     
         user = request.user
+       
         profile=Profile.objects.get(user=user.pk)
         serializer = ProfileSerializer(profile)
 

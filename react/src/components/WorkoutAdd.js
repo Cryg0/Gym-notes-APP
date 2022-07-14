@@ -15,7 +15,7 @@ const WorkoutAdd = props => {
         },
         {
           value: "Barbell squats",
-          label: "Barbel squats"
+          label: "Barbell squats"
         },
         {
           value: "Pullover",

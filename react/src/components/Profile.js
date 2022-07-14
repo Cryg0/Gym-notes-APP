@@ -1,9 +1,10 @@
 import axios from 'axios'
 import React from 'react'
-
 import ProfileEdit from './ProfileEdit.'
 import Chart from 'react-apexcharts'
+import GoalAdd from './GoalAdd'
 
+const Swal = require('sweetalert2')
 
 
 export default function Profile(){
@@ -13,8 +14,11 @@ export default function Profile(){
     const [profileData,setProfileData]= React.useState({'user':{},'picture':''})
     const [exercises,setExercises] = React.useState([])
     const[charSelect,setCharSelect]=React.useState('')
+    const[goals,setGoals]=React.useState({"data":[]})
+    const[isClicked1,setIsClicked1]=React.useState(false)
 
-    
+    const handlePopup1 = () => {
+        setIsClicked1(prev => !prev)}   
 
     const [state,setState]=React.useState({
         options: {
@@ -34,7 +38,19 @@ export default function Profile(){
       
     })
 
+    React.useEffect(()=>{
+        try{
+            axios.get("goals/")
+            .then((response)=>{
+                setGoals(response.data)
 
+        })
+        }catch(error){
+            console.log(error)
+        }
+    },[isClicked1])
+
+   
     React.useEffect(()=>{
         try{
             axios.get("chart-data/?exercise="+charSelect)
@@ -75,6 +91,52 @@ export default function Profile(){
         setCharSelect(e.target.value)
     }
 
+
+const deleteGoal=(goal_id)=>{
+    console.log(goal_id)
+Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+    if (result.isConfirmed) {
+        try{
+            axios.delete('/goals/'+goal_id+'/')
+            .then((res)=>{
+                Swal.fire({
+                    position: 'top-right',
+                    toast:true,
+                    icon: 'success',
+                    title: 'Goal has been deleted',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                
+                    axios.get('/goals/').then((response)=>{
+                    setGoals(response.data)
+                    } )
+                .catch((error)=>{
+                    console.log(error)
+                })
+
+            });
+        }catch(error){
+            Swal.fire('error','Goal has not been delete')
+        }
+        
+    }
+    })
+    }
+
+
+
+
+
+
 return(
 <div className="container">
     <div className="row">
@@ -113,10 +175,7 @@ return(
                         <p><span className="fab fa-twitter me-2"></span>Body height</p>
                         <a >{profileData.height} m</a>
                     </div>
-                    <div className="d-flex justify-content-between border-bottom py-2 px-3">
-                        <p><span className="me-2"></span>Goals</p>
-                        <a ></a>
-                    </div>
+                    
                     
                 </div>
             </div>
@@ -136,19 +195,37 @@ return(
                 </div>
 
                 <div className="col-12 bg-white px-3 pb-2">
-                    <h6 className="d-flex align-items-center mb-3 fw-bold py-3"><i
+                {isClicked1 && <GoalAdd handleClose={handlePopup1}  />}
+                    <h6 className="d-flex align-items-center fw-bold py-3"><i
                         className="text-info me-2">Goals</i>
+                        <i onClick={handlePopup1} className="bi bi-plus-circle"></i>
                         </h6>
-                    <small>Bench press</small>
-                    <div className="progress mb-3" style={{ height: "5px" }}>
-                        <div className="progress-bar bg-primary" role="progressbar" style={{ width: "60%" }}
-                            aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <small>Body weight</small>
-                    <div className="progress mb-3" style={{ height: "5px" }}>
-                        <div className="progress-bar bg-primary" role="progressbar" style={{ width: "72%" }}
-                            aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
+                        
+                     {goals.data.map((goal,index)=>(
+
+                        <div key={index}>
+                            <div className="icons" style={{float:"right"}}>
+                        <i  onClick ={()=>deleteGoal(goal.id)}className="bi bi-trash3"></i>
+                        </div>
+    
+                        <small>{goal.name}</small>
+                        <span style={{float:"right"}}>{goal.value}</span>
+                        <div className="p-2 icons">
+       
+       
+        
+        
+    </div>
+                        <div className="progress mb-3" style={{ height: "5px" }}>
+                        
+                            <div className="progress-bar bg-primary" role="progressbar" style={{ width: goal.current_percent+"%" }}
+                                aria-valuenow="120" aria-valuemin="0" aria-valuemax={goal.value}></div>
+                        </div>
+                         
+                        </div>
+                     ))}   
+                    
+                    
                     
                 </div>
             </div>

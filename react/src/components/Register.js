@@ -32,7 +32,7 @@ export default function Register(){
         
 
         
-        axios.post('/user/register/',userFormData)
+        axios.post('/user/register/',userFormData,axios.defaults.headers.common['Authorization']='')
         .then((response) =>{
             if (response.status===201){
                 

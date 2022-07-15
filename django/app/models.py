@@ -72,4 +72,17 @@ class Workout(models.Model):
     class Meta:
         ordering = ["date"]
     def __str__(self) -> str:
+<<<<<<< Updated upstream
         return self.name
+=======
+        return self.name
+
+class Goal(models.Model):
+    name=models.CharField(max_length=100)
+    value=models.IntegerField(default=1)
+    user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='goals')
+
+    def __str__(self) -> str:
+        return self.name
+
+>>>>>>> Stashed changes

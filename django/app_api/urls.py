@@ -10,8 +10,16 @@ urlpatterns=[
     path('workouts/<int:pk>/',WorkoutDetail.as_view(),name='workout-detail'),
     path('exercises/',ExerciseList.as_view(),name='exercise-list'),
     path('exercises/<int:pk>/',ExerciseDetail.as_view(),name='exercise-detail'),
+<<<<<<< Updated upstream
     path('workoutExercises/<int:workout_id>',WorkoutExercises.as_view(),name='exercises-list'),
     path('data/',ExercisesData,name='exercise'),
+=======
+    path('chart-data/',ChartsData.as_view(),name='chart-data'),
+    path('goals/',GoalList.as_view(),name='goals-list'),
+    path('goals/<int:pk>/',GoalDetail.as_view(),name='goal-detail'),
+
+    
+>>>>>>> Stashed changes
 
 
 ]

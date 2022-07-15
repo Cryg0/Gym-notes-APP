@@ -13,6 +13,8 @@ import PrivateRoutes from './components/PrivateRoute';
 import Profile from './components/Profile'
 
 
+
+
 function App() {
   return (
     <div className="App">
@@ -20,6 +22,7 @@ function App() {
      
       <BrowserRouter>
       <Routes>
+<<<<<<< Updated upstream
         
           <Route element ={<PrivateRoutes/>} >
             
@@ -36,6 +39,17 @@ function App() {
       
         
       
+=======
+
+        <Route element ={<PrivateRoutes/>} >
+        
+          <Route path='/' element={<Workouts/>}/>
+          <Route path='/workouts/:workoutId' element={<Workout/>}/>
+          <Route path='/profile' element={<Profile/>}/>
+        </Route>
+         <Route path='/login' element={<Login/>}/> 
+        <Route path='/register' element={<Register/>}/>
+>>>>>>> Stashed changes
       </Routes>
       </BrowserRouter>
     </div>

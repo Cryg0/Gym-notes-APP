@@ -19,8 +19,11 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -161,13 +164,16 @@ REST_FRAMEWORK = {
 #IsAdminUser
 #IsAuthenticatedOrReadOnly
 
-CORS_ALLOWED_ORIGINS=[
-    "http://localhost:3000"
-]
+# CORS_ALLOWED_ORIGINS=[
+#     "http://localhost:3000"
+
+CORS_ORIGIN_ALLOW_ALL=True
+CORS_ALLOW_CREDENTIALS=True
 
 AUTH_USER_MODEL='users.User'
 
 
+<<<<<<< Updated upstream
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=5),
@@ -199,3 +205,5 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+=======
+>>>>>>> Stashed changes

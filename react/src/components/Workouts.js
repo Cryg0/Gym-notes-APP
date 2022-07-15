@@ -10,9 +10,30 @@ const Swal = require('sweetalert2')
 const baseUrl = 'http://127.0.0.1:8000/api'
 
 export default function Workouts() {
+<<<<<<< Updated upstream
     let {authTokens,logoutUser}=React.useContext(AuthContext)
     
 
+=======
+const [load,setLoad]=React.useState('false')
+let {logoutUser,accessToken}=React.useContext(AuthContext)
+const [page,setPage]=React.useState(1)
+const [pageF,setPageF]=React.useState(1)
+const [isClicked, setIsClicked] = React.useState(false)
+const handlePopup = () => {setIsClicked(prev => !prev)}
+const [isClicked2,setIsClicked2] = React.useState(false)
+
+
+
+const [activeWorkoutsData,setActiveWorkoutsData] = React.useState({'data':[{
+    'name':'',
+    'date':'',
+    'user':'',
+    'status':'',
+    'exercises':''},
+]
+})
+>>>>>>> Stashed changes
 
   const [isClicked, setIsClicked] = React.useState(false)
   const handlePopup = () => {setIsClicked(prev => !prev)}
@@ -27,10 +48,31 @@ export default function Workouts() {
 }])
 
 React.useEffect(()=>{
+<<<<<<< Updated upstream
   axios.get(baseUrl+'/workouts/',
   {headers:{'Authorization':'JWT '+String(authTokens.access)}}
 
    ).then((response)=>{
+=======
+    axios.get('/workouts/?page='+pageF+"&&sort=finished")
+    .then((response)=>{
+      if (response.status ===200){
+          setFinishedWorkoutsData(response.data)
+      }
+        
+  
+  } ).catch(()=>{
+    
+  });
+  },[pageF,isClicked,isClicked2,logoutUser] );  
+  
+
+
+
+React.useEffect(()=>{
+  axios.get('/workouts/?page='+page+"&&sort=active",{},{headers:{"Authorization":"JWT "+window.localStorage.getItem('Access_token')}},)
+  .then((response)=>{
+>>>>>>> Stashed changes
     if (response.status ===200){
   setWorkoutsData(response.data)
 }else if (response.statusText === 'Unauthorized'){
@@ -39,6 +81,14 @@ React.useEffect(()=>{
 } );
 },[isClicked2,isClicked] );  
 
+<<<<<<< Updated upstream
+=======
+} )
+.catch((error)=>{
+    
+});
+},[page,isClicked,isClicked2,load,logoutUser] );  
+>>>>>>> Stashed changes
 
 
 const [workoutId,setWorkoutId] = React.useState('')
@@ -66,7 +116,7 @@ const deleteWorkout=(workoutId)=>{
                 {headers:{'Authorization':'JWT '+String(authTokens.access)}})
                 .then((res)=>{
                     Swal.fire({
-                        title:'Sucess',text:'Exercise has been deleted',
+                        title:'Sucess',text:'Workout has been deleted',
                         timer: 1000,position: 'top-right'})
                     try{
                         axios.get(baseUrl+'/workouts/',{headers:{'Authorization':'JWT '+String(authTokens.access)}}
@@ -79,7 +129,7 @@ const deleteWorkout=(workoutId)=>{
 
                 });
             }catch(error){
-                Swal.fire('error','Exercise has not been delete')
+                Swal.fire('error','Workout has not been delete')
             }
          
         }

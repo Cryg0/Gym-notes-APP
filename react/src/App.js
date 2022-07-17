@@ -12,6 +12,8 @@ import react from 'react'
 import AuthContext from './components/context/AuthContext';
 
 
+
+
 function App() {
   let {user}=react.useContext(AuthContext)
 
@@ -22,13 +24,17 @@ function App() {
     <BrowserRouter>
     {user &&<Header/>}
       <Routes>
+
         <Route element ={<PrivateRoutes/>} >
+
           <Route path='/' element={<Workouts/>}/>
           <Route path='/workouts/:workoutId' element={<Workout/>}/>
           <Route path='/profile' element={<Profile/>}/>
         </Route>
          <Route path='/login' element={<Login/>}/> 
         <Route path='/register' element={<Register/>}/>
+
+
       </Routes>
     </BrowserRouter>
   </div>

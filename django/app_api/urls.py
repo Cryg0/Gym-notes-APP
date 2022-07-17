@@ -16,7 +16,4 @@ urlpatterns=[
     path('goals/',GoalList.as_view(),name='goals-list'),
     path('goals/<int:pk>/',GoalDetail.as_view(),name='goal-detail'),
 
-    
-
-
 ]

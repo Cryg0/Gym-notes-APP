@@ -13,11 +13,14 @@ const Swal = require('sweetalert2')
 export default function Workouts() {
 const [load,setLoad]=React.useState('false')
 let {logoutUser}=React.useContext(AuthContext)
+
 const [page,setPage]=React.useState(1)
 const [pageF,setPageF]=React.useState(1)
 const [isClicked, setIsClicked] = React.useState(false)
 const handlePopup = () => {setIsClicked(prev => !prev)}
 const [isClicked2,setIsClicked2] = React.useState(false)
+
+
 
 const [activeWorkoutsData,setActiveWorkoutsData] = React.useState({'data':[{
     'name':'',
@@ -45,7 +48,7 @@ React.useEffect(()=>{
         
   
   } ).catch(()=>{
-    logoutUser()
+    
   });
   },[pageF,isClicked,isClicked2,logoutUser] );  
   
@@ -53,8 +56,10 @@ React.useEffect(()=>{
 
 
 React.useEffect(()=>{
-  axios.get('/workouts/?page='+page+"&&sort=active")
+  axios.get('/workouts/?page='+page+"&&sort=active",{},{headers:{"Authorization":"JWT "+window.localStorage.getItem('Access_token')}},)
   .then((response)=>{
+
+
     if (response.status ===200){
         setActiveWorkoutsData(response.data)
         setLoad(false)
@@ -63,9 +68,11 @@ React.useEffect(()=>{
 
 } )
 .catch((error)=>{
-    logoutUser()
+    
 });
 },[page,isClicked,isClicked2,load,logoutUser] );  
+
+
 
 
 const [workoutId,setWorkoutId] = React.useState('')
@@ -92,13 +99,13 @@ const deleteWorkout=(workoutId)=>{
                 axios.delete('/workouts/'+workoutId+'/')
                 .then((res)=>{
                     Swal.fire({
-                        title:'Sucess',text:'Exercise has been deleted',
+                        title:'Sucess',text:'Workout has been deleted',
                         timer: 1000,position: 'top-right'})
                     setLoad(true)
 
                 });
             }catch(error){
-                Swal.fire('error','Exercise has not been delete')
+                Swal.fire('error','Workout has not been delete')
             }
          
         }

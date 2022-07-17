@@ -8,7 +8,12 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from users.models import User
+from users.authentication import decode_access_token
+from rest_framework.authentication import get_authorization_header
 
+
+import math
+from users.models import User
 import math
 
 permission=[AllowAny]   #[AllowAny]
@@ -58,10 +63,51 @@ class WorkoutList(APIView):
         return Response (status=status.HTTP_400_BAD_REQUEST)
     
     def get(self, request):
+
         user = request.user
        
         items = user.workout_set.all()
+
+        serializer = WorkoutSerializer(items, many=True)
+
+        auth = get_authorization_header(request).split()
+
+        if auth and len(auth) == 2:
+            token = auth[1].decode('utf-8')
+            id = decode_access_token(token)
+        
+
+
+
+        user = User.objects.get(pk=id)
+       
+
+        items = user.workout_set.all()
         total=items.count()
+        
+        if 'sort' in request.GET:
+            sort=request.GET['sort']
+                
+            if sort=='finished':
+                items=user.workout_set.all().filter(status='finished').order_by('-date')
+                total=items.count()
+            elif sort=='active':
+                items=user.workout_set.all().filter(status='active')
+                total=items.count()
+                    
+        if 'page' in request.GET:
+            page=int(request.GET.get('page',1))
+            per_page=5
+            start=(page-1)*per_page
+            end=page*per_page
+            serializer = WorkoutSerializer(items[start:end], many=True) 
+            return Response({
+        'data':serializer.data,'total':total,
+        'page':page,'last_page':math.ceil(total/per_page)})
+        
+
+        total=items.count()
+
 
         # # Filtering data by querry
         # if 'results' in request.GET:

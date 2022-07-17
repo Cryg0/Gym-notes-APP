@@ -18,19 +18,13 @@ class ExerciseSerializer(serializers.ModelSerializer):
         model=Exercise
         fields=('id','name','category','weight','sets','reps','workout')
 
+
 class WorkoutSerializer(serializers.ModelSerializer):
     class Meta:
         model=Workout
         fields=('id','name','date','user','status')
 
-    
-    # def create(self, validated_data):
-    #     exercises_data = validated_data.pop('exercises')
-    #     workout = Workout.objects.create(**validated_data)
-    #     for exercise_data in exercises_data:
-    #         Exercise.objects.create(workout=workout, **exercise_data)
-    #     return workout
-    
+
 class GoalSerializer(serializers.ModelSerializer):
     current_percent=serializers.SerializerMethodField()
     def get_current_percent(self,obj):
@@ -47,7 +41,6 @@ class GoalSerializer(serializers.ModelSerializer):
        
        
         return round(current_value*100/obj.value)
-
 
     class Meta:
         model=Goal

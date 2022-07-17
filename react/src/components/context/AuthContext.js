@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+
 import axios from 'axios'
 import jwt_decode from "jwt-decode";
 
@@ -10,37 +11,70 @@ import jwt_decode from "jwt-decode";
 
  export const AuthProvider = ({children}) => {
 
-  
     
+
+    
+    const [state,setState]=useState(false)
     const [user,setUser]=useState(()=>localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')): null)
-    const [authTokens,setAuthTokens] = useState(()=>localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')): null)
-    const [loading,setLoading] = useState(true)
+    const [accessToken,setAccessToken] = useState(()=>localStorage.getItem('Access_token') ? localStorage.getItem('Access_token'): null)
+    
     const [res,setRes]=useState({})
     
+
+    
+   
+    axios.defaults.headers.common['Content-Type']='application/json'
+    
+
+
+
+   
+ useEffect(()=>{
+    (async()=>{
+        try{
+            const {data}=await axios.get('/user/user/')
+            setUser(data)
+            }catch(e){
+                
+            }
+        })()
+    
+    
+        },[])
+    
+
     
     axios.defaults.baseURL='http://127.0.0.1:8000/api/'
     axios.defaults.headers.common['Authorization']='JWT '+authTokens?.access
     axios.defaults.headers.common['Content-Type']='application/json'
     
 
+
     let loginUser=  (e)=>{
         e.preventDefault()
        
     
-       
-         axios.post('/token/',{'email':e.target.email.value,
-            'password':e.target.password.value})
-            .then((response)=>{
 
+         axios.post('/user/login/',{'email':e.target.email.value,
+            'password':e.target.password.value},{withCredentials:true})
+            .then((response)=>{
+              
             if (response.status === 200){
-                setAuthTokens(JSON.stringify(response.data))
-                setUser(jwt_decode(JSON.stringify(response.data.access)))
-                axios.defaults.headers.common['Authorization']='JWT '+authTokens?.access
-                localStorage.setItem('authTokens',JSON.stringify(response.data))
+              
+                setAccessToken(response.data)
+                localStorage.setItem('Access_token',response.data.token)
+
                 window.location.href='/'
-            }else{
+               
                 
+                
+                
+                
+               
+              
             }
+                
+            
         }).catch(error =>{
             
            setRes({'401':error.response.data.detail})
@@ -48,7 +82,6 @@ import jwt_decode from "jwt-decode";
         })
         
     }
-
 
 
     let logoutUser = ()=>{
@@ -82,35 +115,38 @@ import jwt_decode from "jwt-decode";
         if (loading){
             setLoading(false)
         }
+=======
+
+    let logoutUser = async ()=>{
+       
+        await axios.post('/user/logout/',{},{withCredentials:true})
+        
+        setAccessToken(null)
+        setUser(null)
+
+        
+
+       
+
     }
+
+    
 
     let contextData = {
         user:user,        
         loginUser:loginUser,
         logoutUser:logoutUser,
-        authTokens:authTokens,
+        accessToken:accessToken,
         res:res
 
         }
 
-        useEffect(()=>{
-            if(loading){
-                updateToken()
-            }
-           let interval =  setInterval(()=>{
-                if(authTokens){
-                    updateToken()
-                }
-            },1000*60*4)
-            return ()=>clearInterval(interval)
-
-        },[authTokens,loading])
-
+       
 
 
     return (
         <AuthContext.Provider value ={contextData}>
-            { loading ? null :children}
+            { children}
         </AuthContext.Provider>
     )
  }

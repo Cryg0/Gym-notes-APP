@@ -2,9 +2,7 @@ from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import RegisterUserSerializer,ProfileSerializer
 from .serializers import ProfileSerializer,UserSerializer
-from .serializers import RegisterUserSerializer,ProfileSerializer,UserSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.views.decorators.csrf import csrf_exempt
@@ -24,21 +22,7 @@ class RegisterAPIView(APIView):
     def post(self,request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-
-            newuser=serializer.save()
-
-
-            if newuser:
-                
-                profile=Profile.objects.create(user=newuser)
-                profile.save()
-
-                return Response(status=status.HTTP_201_CREATED)
-
             serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
-
-
             return Response(status=status.HTTP_201_CREATED)
 
         return Response (serializer.errors,status=status.HTTP_400_BAD_REQUEST)
@@ -61,7 +45,8 @@ class LoginAPIView(APIView):
 
         response.set_cookie(key='refreshToken', value=refresh_token, httponly=True,samesite="none",secure=True)
         response.data = {
-            'token': access_token
+            'token': access_token,
+            'user':user.username
         }
 
         return response
@@ -130,7 +115,13 @@ class UserProfile(APIView):
    
     def get(self, request):
     
-        user = request.user
+        auth = get_authorization_header(request).split()
+
+        if auth and len(auth) == 2:
+            token = auth[1].decode('utf-8')
+            id = decode_access_token(token)
+
+            user = User.objects.filter(pk=id).first()
        
         profile=Profile.objects.get(user=user.pk)
         serializer = ProfileSerializer(profile)
@@ -140,7 +131,13 @@ class UserProfile(APIView):
     def put(self,request):
         data=request.data
         
-        user=request.user
+        auth = get_authorization_header(request).split()
+
+        if auth and len(auth) == 2:
+            token = auth[1].decode('utf-8')
+            id = decode_access_token(token)
+
+        user = User.objects.filter(pk=id).first()
 
         user.first_name=data["first_name"]
         user.save()

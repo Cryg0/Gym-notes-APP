@@ -53,7 +53,7 @@ return (
           <ul className="navbar-nav ms-auto mb-5 mb-lg-0">
             <li className="nav-item  dropdown   " >
               <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {user.username}
+                {user}
               </a>
               <ul className="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdown">
                 <li><a className="dropdown-item" href="/profile">Profile</a></li>

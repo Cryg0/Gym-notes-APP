@@ -12,10 +12,7 @@ import jwt_decode from "jwt-decode";
  export const AuthProvider = ({children}) => {
 
     
-
-    
-    const [state,setState]=useState(false)
-    const [user,setUser]=useState(()=>localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')): null)
+    const [user,setUser]=useState(localStorage.getItem('User'))
     const [accessToken,setAccessToken] = useState(()=>localStorage.getItem('Access_token') ? localStorage.getItem('Access_token'): null)
     
     const [res,setRes]=useState({})
@@ -24,28 +21,8 @@ import jwt_decode from "jwt-decode";
     
    
     axios.defaults.headers.common['Content-Type']='application/json'
-    
+    axios.defaults.headers.common['Authorization']='JWT '+accessToken
 
-
-
-   
- useEffect(()=>{
-    (async()=>{
-        try{
-            const {data}=await axios.get('/user/user/')
-            setUser(data)
-            }catch(e){
-                
-            }
-        })()
-    
-    
-        },[])
-    
-
-    
-    axios.defaults.baseURL='http://127.0.0.1:8000/api/'
-    axios.defaults.headers.common['Authorization']='JWT '+authTokens?.access
     axios.defaults.headers.common['Content-Type']='application/json'
     
 
@@ -63,6 +40,8 @@ import jwt_decode from "jwt-decode";
               
                 setAccessToken(response.data)
                 localStorage.setItem('Access_token',response.data.token)
+                localStorage.setItem('User',response.data.user)
+
 
                 window.location.href='/'
                
@@ -84,42 +63,14 @@ import jwt_decode from "jwt-decode";
     }
 
 
-    let logoutUser = ()=>{
-        setAuthTokens(null)
-        setUser(null)
-        axios.post('/user/logout/blacklist/',{"refresh":authTokens.refresh})
-
-
-        localStorage.removeItem('authTokens')
-        window.location.href='/login'
-
-    }
-
-    let updateToken = ()=>{
-        
-
-        axios.post('/token/refresh/',{'refresh':authTokens?.refresh})
-        .then((response)=>{
-
-            if (response.status === 200){
-                setAuthTokens(response.data)
-                setUser(jwt_decode(response.data.access))
-                localStorage.setItem('authTokens',JSON.stringify(response.data))
-                
-            }else{
-                logoutUser()
-            }
-        }).catch(error=>{
-            logoutUser()
-        })
-        if (loading){
-            setLoading(false)
-        }
-=======
+  
+    
 
     let logoutUser = async ()=>{
        
         await axios.post('/user/logout/',{},{withCredentials:true})
+        localStorage.removeItem('User')
+        localStorage.removeItem('Access_token')
         
         setAccessToken(null)
         setUser(null)

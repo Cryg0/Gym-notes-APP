@@ -64,12 +64,6 @@ class WorkoutList(APIView):
     
     def get(self, request):
 
-        user = request.user
-       
-        items = user.workout_set.all()
-
-        serializer = WorkoutSerializer(items, many=True)
-
         auth = get_authorization_header(request).split()
 
         if auth and len(auth) == 2:
@@ -176,7 +170,13 @@ class ExerciseList(APIView):
            
             return Response(serializer.data)
             
-        user = request.user
+        auth = get_authorization_header(request).split()
+
+        if auth and len(auth) == 2:
+            token = auth[1].decode('utf-8')
+            id = decode_access_token(token)
+
+        user = User.objects.filter(pk=id).first()
         workouts = user.workout_set.all().filter(status='finished')
 
         exercises=[]
@@ -211,7 +211,15 @@ class ChartsData(APIView):
 
 
     def get(self, request):
-        user = self.request.user
+
+        auth = get_authorization_header(request).split()
+
+        if auth and len(auth) == 2:
+            token = auth[1].decode('utf-8')
+            id = decode_access_token(token)
+
+            user = User.objects.filter(pk=id).first()
+        
         workouts=user.workout_set.all().filter(status='finished')
 
         exercises=[]
@@ -257,7 +265,20 @@ class ChartsData(APIView):
 
 class GoalList(APIView):
     def get(self, request):
-        user = request.user
+        auth = get_authorization_header(request).split()
+
+    
+        if auth and len(auth) == 2:
+            token = auth[1].decode('utf-8')
+            id = decode_access_token(token)
+        
+
+
+
+        user = User.objects.get(pk=id)
+
+
+       
         goals=Goal.objects.filter(user=user)
         serializer=GoalSerializer(goals,many=True)
        

@@ -4,11 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './components/context/AuthContext';
-<<<<<<< Updated upstream
-=======
 import './components/Axios.js'
 
->>>>>>> Stashed changes
 
 
 

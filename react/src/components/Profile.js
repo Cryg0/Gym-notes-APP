@@ -40,7 +40,7 @@ export default function Profile(){
 
     React.useEffect(()=>{
         try{
-            axios.get("goals/")
+            axios.get("goals/",)
             .then((response)=>{
                 setGoals(response.data)
 
@@ -66,7 +66,7 @@ export default function Profile(){
 
     React.useEffect(()=>{
         try{
-            axios.get("/user/profile/")
+            axios.get("/user/profile/",{},{headers:{"Authorization":"JWT "+window.localStorage.getItem('Access_token')}})
             .then((response)=>{
                 setProfileData(response.data)
             })

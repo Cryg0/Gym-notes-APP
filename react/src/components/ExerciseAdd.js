@@ -1,8 +1,6 @@
 import React from "react";
 import axios from 'axios'
 
-const baseUrl='http://127.0.0.1:8000/api'
-
 const ExerciseAdd = props => {
 
     const [exerciseData,setExerciseData] = React.useState({
@@ -14,8 +12,6 @@ const ExerciseAdd = props => {
       
     })
     
-
-
 const handleChange=(event)=>{
 
   setExerciseData({
@@ -35,14 +31,10 @@ const formSubmit=()=>{
     exerciseForm.append('workout',exerciseData.workout)
 
 try{
-  axios.post(baseUrl+"/exercises/",exerciseForm,{
-    headers :{
-      'content-type':'multipart/form-data'
-    }
-  })
+  axios.post("/exercises/",exerciseForm)
   .then((res)=>{
     if(res.status===201){
-     console.log('ok')
+    
     
      props.handleClose()
      
@@ -53,13 +45,7 @@ try{
 }catch(error){
   console.log(error)
 }
-
-
-
 }
-
-
-
 
   return (
     <div className="popup-box">

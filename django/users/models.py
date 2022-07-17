@@ -5,7 +5,6 @@ from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin,BaseUse
 
 class CustomAccountManager(BaseUserManager):
     def create_superuser(self,email,username,password,**other_fields):
-
         other_fields.setdefault('is_staff',True)
         other_fields.setdefault('is_superuser',True)
         other_fields.setdefault('is_active',True)
@@ -44,20 +43,19 @@ class User(AbstractBaseUser,PermissionsMixin):
     def __str__(self):
         return self.username
 
+
+
 class Profile(models.Model):
 
-   
-
-
-
-    user=models.ForeignKey(
+    user=models.OneToOneField(
         User,
         on_delete=models.CASCADE,
         related_name='profile'
 
     )
     
-   
+    height=models.DecimalField(decimal_places=2,max_digits=3,blank=True,null=True)
+    weight=models.IntegerField(blank=True,null=True)
     picture=models.ImageField(
         'photo',
         default='user/profile/default.png',
@@ -67,5 +65,3 @@ class Profile(models.Model):
    
     def __str__(self):
         return self.user.username
-
- 

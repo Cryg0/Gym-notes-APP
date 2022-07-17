@@ -7,8 +7,6 @@ import ExerciseUpdate from './ExerciseUpdate'
 
 const Swal = require('sweetalert2')
 
-const baseUrl = 'http://127.0.0.1:8000/api'
-
 export default function Workout(){
 const {workoutId}=useParams()
  
@@ -19,7 +17,7 @@ const [isClicked1, setIsClicked1] = React.useState(false)
 
 React.useEffect(()=>{
     try{
-    axios.get(baseUrl+'/workoutExercises/'+workoutId).then((response)=>{
+    axios.get('/exercises/?workout_id='+workoutId).then((response)=>{
     setWorkoutData(response.data)
   } );
 }catch(error){
@@ -27,9 +25,6 @@ React.useEffect(()=>{
 }
   },[isClicked1,isClicked] );  
     
- 
-
-
 const [exerciseId,setExerciseId] = React.useState('')
 
   const handlePopup = (exerciseId) => {
@@ -49,7 +44,7 @@ const deleteExercise=(excerciseId)=>{
       }).then((result) => {
         if (result.isConfirmed) {
             try{
-                axios.delete(baseUrl+'/exercises/'+excerciseId+'/')
+                axios.delete('/exercises/'+excerciseId+'/')
                 .then((res)=>{
                     Swal.fire({
                         position: 'top-right',
@@ -59,13 +54,13 @@ const deleteExercise=(excerciseId)=>{
                         showConfirmButton: false,
                         timer: 1500
                     })
-                    try{
-                        axios.get(baseUrl+'/workoutExercises/'+workoutId).then((response)=>{
+                   
+                        axios.get('/exercises/?workout_id='+workoutId).then((response)=>{
                         setWorkoutData(response.data)
-                      } );
-                    }catch(error){
+                      } )
+                    .catch((error)=>{
                         console.log(error)
-                    }
+                    })
 
                 });
             }catch(error){

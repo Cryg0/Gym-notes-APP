@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from app.models import Post,Category,Exercise,Workout
+from app.models import Post,Category,Exercise,Workout,Goal
+from users.models import User
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model=Post
         fields=('id','title','author','content','status','published')
-
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -20,24 +20,10 @@ class ExerciseSerializer(serializers.ModelSerializer):
 
 
 class WorkoutSerializer(serializers.ModelSerializer):
-    # exercises=serializers.SlugRelatedField( many=True,slug_field='name',
-    #                                           queryset=Exercise.objects.filter(workout=1))
-    # exercises=ExerciseSerializer(many=True)
-
     class Meta:
         model=Workout
         fields=('id','name','date','user','status')
 
-<<<<<<< Updated upstream
-    
-    # def create(self, validated_data):
-    #     exercises_data = validated_data.pop('exercises')
-    #     workout = Workout.objects.create(**validated_data)
-    #     for exercise_data in exercises_data:
-    #         Exercise.objects.create(workout=workout, **exercise_data)
-    #     return workout
-    
-=======
 
 class GoalSerializer(serializers.ModelSerializer):
     current_percent=serializers.SerializerMethodField()
@@ -55,6 +41,8 @@ class GoalSerializer(serializers.ModelSerializer):
        
        
         return round(current_value*100/obj.value)
->>>>>>> Stashed changes
 
+    class Meta:
+        model=Goal
+        fields=('id','name','user','value',"current_percent")
 

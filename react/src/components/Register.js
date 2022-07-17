@@ -2,12 +2,11 @@ import React from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom';
 
-const baseUrl='http://127.0.0.1:8000/api/'
+
 
 
 export default function Register(){
     
-
     const [userData,setUserData]=React.useState({
         'email':'',
         'username':'',
@@ -15,7 +14,7 @@ export default function Register(){
         
     })
 
-  const [res,setRes]=React.useState({})
+    const [res,setRes]=React.useState({})
     const handleChange=(event)=>{
         setUserData({
             ...userData,
@@ -33,7 +32,8 @@ export default function Register(){
         
 
         
-        axios.post(baseUrl+'user/register/',userFormData).then((response) =>{
+        axios.post('/user/register/',userFormData,axios.defaults.headers.common['Authorization']='')
+        .then((response) =>{
             if (response.status===201){
                 
                 setRes({'201':'Account created'})
@@ -46,7 +46,7 @@ export default function Register(){
         if (error.response.data.email){
         setRes({'400':"user with this email address already exists."})}
         else if (error.response.data.username){
-            setRes({'400':"'user with this username already exists.'"}) 
+            setRes({'400':'user with this username already exists.'}) 
         }
 
     })
@@ -61,11 +61,11 @@ export default function Register(){
         <div className="form-left">
             <h2 className="text-uppercase">information</h2>
             <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Et molestie ac feugiat sed. Diam volutpat commodo.
+            Create account in order to use service
             </p>
             <p className="text">
-                <span>Sub Head:</span>
-                Vitae auctor eu augudsf ut. Malesuada nunc vel risus commodo viverra. Praesent elementum facilisis leo vel.
+                
+                
             </p>
             <div className="form-field">
                 <Link to='/login'><input type="submit"  className="account" value="Have an Account?"/></Link>
@@ -75,7 +75,7 @@ export default function Register(){
         <form className="form-right" onSubmit={submitForm}>
         <div className='row'>{res['400'] && <p className='text-danger'>{res['400']}</p> }</div>
 
-        {res['201'] && <p className='text-sucess'>{res['201']}</p> }
+        {res['201'] && <p className='text-success'>{res['201']}</p> }
             <h2 className="text-uppercase">Registration form</h2>
            
             <div className="mb-3">
@@ -96,12 +96,12 @@ export default function Register(){
                 </div>
                 <div className="col-sm-6 mb-3">
                     <label>Current Password</label>
-                    <input value={userData.password} type="password" name="i" id="cpwd" className="input-field"/>
+                    <input onChange={handleChange} value={userData.password} type="password" name="i" id="cpwd" className="input-field"/>
                 </div>
             </div>
             <div className="mb-3">
                 <label className="option">I agree to the <Link to='#'>Terms and Conditions</Link>
-                    <input type="checkbox" checked/>
+                    <input type="checkbox" />
                     <span className="checkmark"></span>
                 </label>
             </div>

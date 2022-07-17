@@ -1,20 +1,14 @@
 
 import React from 'react'
-
 import AuthContext from './context/AuthContext'
 
 
-
-export default function Login(props){
+export default function Login(){
     let {loginUser,res} = React.useContext(AuthContext)
-    
-    
     
    return (
 <div className="container">
     
-        <div className="row">
-           
             <div className="col-md-4 offset-md-4">
             {res['401'] && <div class="alert alert-danger" role="alert">
                 {res['401']}
@@ -33,7 +27,7 @@ export default function Login(props){
                         <div className="col-12">
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" id="rememberMe"/>
-                                <label className="form-check-label" for="rememberMe"> Remember me</label>
+                                <label className="form-check-label" htmlFor="rememberMe"> Remember me</label>
 
                             </div>
                         </div>
@@ -48,7 +42,7 @@ export default function Login(props){
                 </div>
             </div>
             </div>
-            </div>
+           
     
 
     )

@@ -2,11 +2,9 @@ from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-<<<<<<< Updated upstream
 from .serializers import RegisterUserSerializer,ProfileSerializer
-=======
 from .serializers import ProfileSerializer,UserSerializer
->>>>>>> Stashed changes
+from .serializers import RegisterUserSerializer,ProfileSerializer,UserSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.views.decorators.csrf import csrf_exempt
@@ -19,19 +17,16 @@ from rest_framework.authentication import get_authorization_header
 
 
 
-<<<<<<< Updated upstream
-
-class UserCreate(APIView):
-=======
 class RegisterAPIView(APIView):
->>>>>>> Stashed changes
+
     permission_classes = [AllowAny]
 
     def post(self,request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-<<<<<<< Updated upstream
+
             newuser=serializer.save()
+
 
             if newuser:
                 
@@ -39,10 +34,13 @@ class RegisterAPIView(APIView):
                 profile.save()
 
                 return Response(status=status.HTTP_201_CREATED)
-=======
+
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
->>>>>>> Stashed changes
+
+
+            return Response(status=status.HTTP_201_CREATED)
+
         return Response (serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -118,25 +116,48 @@ class BlackListTokenView(APIView):
 
     def post(self,request):
         try:
-            refresh_token=request.data['refresh_token']
+            refresh_token=request.data['refresh']
             token= RefreshToken(refresh_token)
             token.blacklist()
+            return Response(status=status.HTTP_200_OK)
+           
         except Exception as e:
+            
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class UserProfile(APIView):
     permission_classes=[AllowAny]
    
-  
-
     def get(self, request):
+    
         user = request.user
-
+       
         profile=Profile.objects.get(user=user.pk)
         serializer = ProfileSerializer(profile)
 
+        return Response(serializer.data)
+    
+    def put(self,request):
+        data=request.data
+        
+        user=request.user
+
+        user.first_name=data["first_name"]
+        user.save()
+
+        profile=user.profile
+        profile.weight=data['weight']
+        profile.height=data['height']
+       
+        profile.picture=data['picture']
+        profile.save()
+        
+        return Response({"message":"success"})
 
        
-        
-        return Response(serializer.data)
+    
+     
+       
+
+    
 

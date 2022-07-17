@@ -5,11 +5,9 @@ import jwt_decode from "jwt-decode";
 
 
 
-
-
  const AuthContext = createContext()
-
  export default AuthContext;
+
 
  export const AuthProvider = ({children}) => {
 
@@ -22,13 +20,12 @@ import jwt_decode from "jwt-decode";
     
     const [res,setRes]=useState({})
     
-<<<<<<< Updated upstream
-=======
+
     
    
     axios.defaults.headers.common['Content-Type']='application/json'
     
->>>>>>> Stashed changes
+
 
 
    
@@ -46,21 +43,18 @@ import jwt_decode from "jwt-decode";
         },[])
     
 
+    
+    axios.defaults.baseURL='http://127.0.0.1:8000/api/'
+    axios.defaults.headers.common['Authorization']='JWT '+authTokens?.access
+    axios.defaults.headers.common['Content-Type']='application/json'
+    
+
+
     let loginUser=  (e)=>{
         e.preventDefault()
        
-       
-<<<<<<< Updated upstream
-         axios.post('http://127.0.0.1:8000/api/token/',{'email':e.target.email.value,'password':e.target.password.value},{
-            headers:{'Content-Type':'application/json'}
-        
-        }).then((response)=>{
+    
 
-            if (response.status === 200){
-                setAuthTokens(JSON.stringify(response.data))
-                setUser(jwt_decode(JSON.stringify(response.data.access)))
-                localStorage.setItem('authTokens',JSON.stringify(response.data))
-=======
          axios.post('/user/login/',{'email':e.target.email.value,
             'password':e.target.password.value},{withCredentials:true})
             .then((response)=>{
@@ -69,7 +63,7 @@ import jwt_decode from "jwt-decode";
               
                 setAccessToken(response.data)
                 localStorage.setItem('Access_token',response.data.token)
->>>>>>> Stashed changes
+
                 window.location.href='/'
                
                 
@@ -82,7 +76,7 @@ import jwt_decode from "jwt-decode";
                 
             
         }).catch(error =>{
-            console.log(error.response.data)
+            
            setRes({'401':error.response.data.detail})
         
         })
@@ -90,25 +84,22 @@ import jwt_decode from "jwt-decode";
     }
 
 
-<<<<<<< Updated upstream
     let logoutUser = ()=>{
         setAuthTokens(null)
         setUser(null)
-        axios.post('http://127.0.0.1:8000/api/user/logout/blacklist/',authTokens.refresh)
+        axios.post('/user/logout/blacklist/',{"refresh":authTokens.refresh})
 
 
         localStorage.removeItem('authTokens')
-        window.location.href('/login')
+        window.location.href='/login'
 
     }
 
     let updateToken = ()=>{
         
 
-        axios.post('http://127.0.0.1:8000/api/token/refresh/',{'refresh':authTokens?.refresh},{
-            headers:{'Content-Type':'application/json'}
-        
-        }).then((response)=>{
+        axios.post('/token/refresh/',{'refresh':authTokens?.refresh})
+        .then((response)=>{
 
             if (response.status === 200){
                 setAuthTokens(response.data)
@@ -119,7 +110,7 @@ import jwt_decode from "jwt-decode";
                 logoutUser()
             }
         }).catch(error=>{
-            console.log(error)
+            logoutUser()
         })
         if (loading){
             setLoading(false)
@@ -137,7 +128,6 @@ import jwt_decode from "jwt-decode";
 
        
 
->>>>>>> Stashed changes
     }
 
     

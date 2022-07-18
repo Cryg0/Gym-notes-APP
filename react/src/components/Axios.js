@@ -1,20 +1,13 @@
 import axios from 'axios'
 
-
-
-
 axios.defaults.baseURL='http://127.0.0.1:8000/api/'
 axios.defaults.headers.common['Content-Type']='application/json'
 axios.defaults.headers.common['Authorization']='JWT '+localStorage.getItem('Access_token')
 
 let refresh = false
 
-
-
-
-
 axios.interceptors.response.use(res =>res, async error =>{
-    if (error.response.status === 401 && !refresh){
+    if (error.response.status === 401  && !refresh){
         refresh=true
         const response= await axios.post('/user/refresh/',{},{withCredentials:true})
         
@@ -24,8 +17,10 @@ axios.interceptors.response.use(res =>res, async error =>{
 
         return axios(error.config)
         }
+        
 
         }
+        
     refresh=false
     return error
 })

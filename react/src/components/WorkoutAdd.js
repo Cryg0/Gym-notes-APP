@@ -46,7 +46,7 @@ const WorkoutAdd = props => {
       
      
     }
-    const names= [selectedValues.map((data)=>(data.value))]
+    const names= [selectedValues.map((data)=>[data.value])]
     const [workoutData,setWorkoutData] = React.useState({
       'name':'',
       'date':'',

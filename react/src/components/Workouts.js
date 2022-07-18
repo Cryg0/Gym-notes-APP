@@ -14,6 +14,7 @@ export default function Workouts() {
 const [load,setLoad]=React.useState(false)
 let {logoutUser}=React.useContext(AuthContext)
 
+const [workoutId,setWorkoutId] = React.useState('')
 const [page,setPage]=React.useState(1)
 const [pageF,setPageF]=React.useState(1)
 const [isClicked, setIsClicked] = React.useState(false)
@@ -48,7 +49,7 @@ React.useEffect(()=>{
         
   
   } ).catch(()=>{
-    
+    logoutUser()
   });
   },[pageF,isClicked,isClicked2,load,logoutUser] );  
   
@@ -75,7 +76,7 @@ React.useEffect(()=>{
 
 
 
-const [workoutId,setWorkoutId] = React.useState('')
+
 
 const handlePopup1 =(workoutId)=>{ 
     setWorkoutId(workoutId)
@@ -101,7 +102,7 @@ const deleteWorkout=(workoutId)=>{
                     Swal.fire({
                         title:'Sucess',text:'Workout has been deleted',
                         timer: 1000,position: 'top-right'})
-                    setLoad(true)
+                    setLoad((prev=>!prev))
 
                 });
             }catch(error){

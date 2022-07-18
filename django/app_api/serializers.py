@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from app.models import Post,Category,Exercise,Workout,Goal
-from users.models import User
+
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,8 +38,6 @@ class GoalSerializer(serializers.ModelSerializer):
             current_value=exercises[-1].weight
         else:
             current_value=0
-       
-       
         return round(current_value*100/obj.value)
 
     class Meta:

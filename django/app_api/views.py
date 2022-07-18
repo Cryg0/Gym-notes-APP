@@ -7,10 +7,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from users.models import User
 from core.middleware.UserMiddleware import UserMiddleware
 from django.utils.decorators import method_decorator
 import math
+from .signals import exerciseGet
+import json
 
 permission=[AllowAny]   #[AllowAny]
 
@@ -43,17 +44,15 @@ class WorkoutList(APIView):
     permission_classes = permission   
     
     def post(self,request,user):
-        exercises=request.data['exercises']
-        data=dict(request.data)
-        data.pop('exercises')
         serializer = WorkoutSerializer(data=request.data)
-
+        exercises=request.data['exercises']
+        
         if serializer.is_valid():
             workout=serializer.save()
 
             if workout:
-                for exercise in exercises.split(','):
-                    Exercise.objects.create(name=exercise,workout=workout)
+                exerciseGet.send(sender=Workout,items=exercises,workout=workout) #sending signal to create exercises
+                
                 return Response(status=status.HTTP_201_CREATED)
         return Response (status=status.HTTP_400_BAD_REQUEST)
     

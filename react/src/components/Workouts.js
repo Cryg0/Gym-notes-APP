@@ -11,7 +11,7 @@ const Swal = require('sweetalert2')
 
 
 export default function Workouts() {
-const [load,setLoad]=React.useState('false')
+const [load,setLoad]=React.useState(false)
 let {logoutUser}=React.useContext(AuthContext)
 
 const [page,setPage]=React.useState(1)
@@ -50,19 +50,19 @@ React.useEffect(()=>{
   } ).catch(()=>{
     
   });
-  },[pageF,isClicked,isClicked2,logoutUser] );  
+  },[pageF,isClicked,isClicked2,load,logoutUser] );  
   
 
 
 
 React.useEffect(()=>{
-  axios.get('/workouts/?page='+page+"&&sort=active",{},{headers:{"Authorization":"JWT "+window.localStorage.getItem('Access_token')}},)
+  axios.get('/workouts/?page='+page+"&&sort=active")
   .then((response)=>{
 
 
     if (response.status ===200){
         setActiveWorkoutsData(response.data)
-        setLoad(false)
+       
     }
         
 

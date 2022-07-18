@@ -10,8 +10,12 @@ from .models import User,Profile
 from rest_framework import generics
 from .models import Profile
 from rest_framework.exceptions import APIException, AuthenticationFailed
-from .authentication import create_access_token, create_refresh_token, decode_access_token, decode_refresh_token
-from rest_framework.authentication import get_authorization_header
+from .authentication import create_access_token, create_refresh_token, decode_refresh_token
+from django.utils.decorators import method_decorator
+from core.middleware.UserMiddleware import UserMiddleware
+
+
+
 
 
 
@@ -46,24 +50,18 @@ class LoginAPIView(APIView):
         response.set_cookie(key='refreshToken', value=refresh_token, httponly=True,samesite="none",secure=True)
         response.data = {
             'token': access_token,
-            'user':user.username
+            'user':{"username":user.username,
+                    'user_id':user.id}
+           
         }
 
         return response
 
 
-
+@method_decorator(UserMiddleware, name='dispatch')
 class UserAPIView(APIView):
-    def get(self, request):
-      
-        auth = get_authorization_header(request).split()
-
-        if auth and len(auth) == 2:
-            token = auth[1].decode('utf-8')
-            id = decode_access_token(token)
-
-            user = User.objects.filter(pk=id).first()
-
+    def get(self, request,user):
+        if user:
             return Response(UserSerializer(user).data)
 
         raise AuthenticationFailed('unauthenticated')
@@ -110,35 +108,19 @@ class BlackListTokenView(APIView):
             
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+@method_decorator(UserMiddleware, name='dispatch')
 class UserProfile(APIView):
     permission_classes=[AllowAny]
    
-    def get(self, request):
-    
-        auth = get_authorization_header(request).split()
-
-        if auth and len(auth) == 2:
-            token = auth[1].decode('utf-8')
-            id = decode_access_token(token)
-
-            user = User.objects.filter(pk=id).first()
-       
+    def get(self,request,user):
+        
         profile=Profile.objects.get(user=user.pk)
         serializer = ProfileSerializer(profile)
 
         return Response(serializer.data)
     
-    def put(self,request):
+    def put(self,request,user):
         data=request.data
-        
-        auth = get_authorization_header(request).split()
-
-        if auth and len(auth) == 2:
-            token = auth[1].decode('utf-8')
-            id = decode_access_token(token)
-
-        user = User.objects.filter(pk=id).first()
-
         user.first_name=data["first_name"]
         user.save()
 

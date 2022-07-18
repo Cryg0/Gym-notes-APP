@@ -66,7 +66,7 @@ export default function Profile(){
 
     React.useEffect(()=>{
         try{
-            axios.get("/user/profile/",{},{headers:{"Authorization":"JWT "+window.localStorage.getItem('Access_token')}})
+            axios.get("/user/profile/")
             .then((response)=>{
                 setProfileData(response.data)
             })
@@ -165,15 +165,15 @@ return(
                 <div className="col-12 bg-white p-0 px-2 pb-3 mb-3">
                     <div className="d-flex justify-content-between border-bottom py-2 px-3">
                         <p><span className="fas fa-globe me-2"></span>Total finished workouts</p>
-                        <a>{profileData.user.total_workouts}</a>
+                        <p>{profileData.user.total_workouts}</p>
                     </div>
                     <div className="d-flex justify-content-between border-bottom py-2 px-3">
                         <p><span className="fab fa-github-alt me-2"></span>Body weight</p>
-                        <a >{profileData.weight} kg</a>
+                        <p >{profileData.weight} kg</p>
                     </div>
                     <div className="d-flex justify-content-between border-bottom py-2 px-3">
                         <p><span className="fab fa-twitter me-2"></span>Body height</p>
-                        <a >{profileData.height} m</a>
+                        <p >{profileData.height} m</p>
                     </div>
                     
                     

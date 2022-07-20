@@ -10,8 +10,8 @@ export default function Login(){
 <div className="container">
     
             <div className="col-md-4 offset-md-4">
-            {res['401'] && <div class="alert alert-danger" role="alert">
-                {res['401']}
+            {res['error'] && <div class="alert alert-danger" role="alert">
+                {res['error']}
             </div> }
                 <div className="login-form bg-light mt-4 p-4">
                     <form onSubmit={loginUser} method="" className="row g-3">

@@ -15,15 +15,16 @@ from django.utils.decorators import method_decorator
 from core.middleware.UserMiddleware import UserMiddleware
 
 
-
-
-
-
 class RegisterAPIView(APIView):
 
     permission_classes = [AllowAny]
 
     def post(self,request):
+        if User.objects.filter(email=request.data['email']):
+            raise APIException('User with this email exists!')
+        if User.objects.filter(username=request.data['username']):
+            raise APIException('User with this username exists!')
+
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -34,13 +35,14 @@ class RegisterAPIView(APIView):
 
 class LoginAPIView(APIView):
     def post(self, request):
+      
         user = User.objects.filter(email=request.data['email']).first()
 
         if not user:
-            raise APIException('Invalid credentials!')
+            raise APIException('User not found!')
 
         if not user.check_password(request.data['password']):
-            raise APIException('Invalid credentials!')
+            raise APIException('Wrong password!')
 
         access_token = create_access_token(user.id)
         refresh_token = create_refresh_token(user.id)
@@ -78,14 +80,9 @@ class RefreshAPIView(APIView):
 
 
 class LogoutAPIView(APIView):
-    def post(self, _):
-       
+    def post(self, request):
         response = Response()
-       
-        
         response.delete_cookie("refreshToken")
-        
-
         response.data = {
             'message': 'success'
         }
@@ -105,7 +102,6 @@ class BlackListTokenView(APIView):
             return Response(status=status.HTTP_200_OK)
            
         except Exception as e:
-            
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @method_decorator(UserMiddleware, name='dispatch')

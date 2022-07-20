@@ -1,11 +1,17 @@
 from rest_framework import serializers
 from users.models import User,Profile
 
+
 class UserSerializer(serializers.ModelSerializer):
+    total_workouts = serializers.SerializerMethodField()
+
+    def get_total_workouts(self, obj):
+        workouts = obj.workout_set.all().filter(status='finished').count()
+        return workouts
 
     class Meta:
         model = User
-        fields = ('email','username','password')
+        fields = ('id','password','username','first_name','email','about','total_workouts')
         extra_kwargs={'password':{'write_only':True}}
 
     def create(self,validated_data):
@@ -16,21 +22,6 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
-
-
-class UserSerializer(serializers.ModelSerializer):
-    total_workouts = serializers.SerializerMethodField()
-   
-
-    def get_total_workouts(self, obj):
-        workouts = obj.workout_set.all().filter(status='finished').count()
-        return workouts
-    
-
-
-    class Meta:
-        model = User
-        fields = ('id','username','first_name','email','about','total_workouts')
 
 class ProfileSerializer(serializers.ModelSerializer):
     

@@ -2,18 +2,14 @@ import React from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom';
 
-
-
-
 export default function Register(){
-    
     const [userData,setUserData]=React.useState({
         'email':'',
         'username':'',
         'password':'',
         
     })
-
+    
     const [res,setRes]=React.useState({})
     const handleChange=(event)=>{
         setUserData({
@@ -30,28 +26,22 @@ export default function Register(){
         userFormData.append('username',userData.username)
         userFormData.append('password',userData.password)
         
-
-        
-        axios.post('/user/register/',userFormData,axios.defaults.headers.common['Authorization']='')
+        axios.post('/user/register/',userFormData)
         .then((response) =>{
             if (response.status===201){
-                
-                setRes({'201':'Account created'})
                 window.location.href='/login'
+            }
+            else{
+                setRes({"error":response.response.data.detail})
             }
            
         })
     .catch(error=>{
         
-        if (error.response.data.email){
-        setRes({'400':"user with this email address already exists."})}
-        else if (error.response.data.username){
-            setRes({'400':'user with this username already exists.'}) 
-        }
+        console.log(error)
 
     })
-    
-       
+
     
      }
     
@@ -73,9 +63,8 @@ export default function Register(){
         </div>
          
         <form className="form-right" onSubmit={submitForm}>
-        <div className='row'>{res['400'] && <p className='text-danger'>{res['400']}</p> }</div>
+        <div className='row'>{res['error'] && <p className='text-danger'>{res['error']}</p> }</div>
 
-        {res['201'] && <p className='text-success'>{res['201']}</p> }
             <h2 className="text-uppercase">Registration form</h2>
            
             <div className="mb-3">

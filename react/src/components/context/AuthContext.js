@@ -21,9 +21,14 @@ import axios from 'axios'
                 localStorage.setItem('Access_token',response.data.token)
                 localStorage.setItem('User',JSON.stringify(response.data.user))
                 window.location.href='/'
+
+            }
+            else{
+                setRes({'error':response.response.data.detail})
             }
             }).catch(error =>{
-            setRes({'401':error.response.data.detail})
+                console.log(error)
+           
         })
         }
 

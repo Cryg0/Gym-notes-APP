@@ -1,11 +1,9 @@
-
 from django.db import models
 from users.models import User
 from django.utils import timezone
 
-
 class Post(models.Model):
-
+    
     class PostObjects(models.Manager):
         def get_queryset(self):
             return super().get_queryset().filter(status='published')

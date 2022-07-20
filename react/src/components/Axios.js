@@ -7,7 +7,7 @@ axios.defaults.headers.common['Authorization']='JWT '+localStorage.getItem('Acce
 let refresh = false
 
 axios.interceptors.response.use(res =>res, async error =>{
-    if (error.response.status === 401  && !refresh){
+    if (error.response.status === 401   && !refresh){
         refresh=true
         const response= await axios.post('/user/refresh/',{},{withCredentials:true})
         

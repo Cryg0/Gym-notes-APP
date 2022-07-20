@@ -5,13 +5,11 @@ from rest_framework.permissions import  SAFE_METHODS,IsAuthenticated, BasePermis
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
 from core.middleware.UserMiddleware import UserMiddleware
 from django.utils.decorators import method_decorator
 import math
 from .signals import exerciseGet
-import json
+
 
 permission=[AllowAny]   #[AllowAny]
 
@@ -90,21 +88,6 @@ class WorkoutDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes=permission  
     queryset=Workout.objects.all()
     serializer_class=WorkoutSerializer
-
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-
-        # Add custom claims
-        token['username'] = user.username
-        # ...
-
-        return token
-
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
 
 
 @method_decorator(UserMiddleware, name='dispatch')
@@ -205,9 +188,7 @@ class GoalList(APIView):
         return Response({'data':serializer.data})
      
     def post(self,request,user):
-         
         serializer = GoalSerializer(data=request.data)
-        
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)

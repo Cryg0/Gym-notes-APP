@@ -199,3 +199,9 @@ class GoalDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes=permission  
     queryset=Goal.objects.all()
     serializer_class=GoalSerializer
+
+
+class BaseExerciseList(generics.ListAPIView):
+    permission_classes=permission  
+    queryset=BaseExercise.objects.all()
+    serializer_class=BaseExerciseSerializer

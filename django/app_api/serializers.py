@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from app.models import Post,Category,Exercise,Workout,Goal
+from app.models import Post,Category,Exercise,Workout,Goal,BaseExercise
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -12,6 +12,7 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model=Category
         fields=('part')
+
 
 class ExerciseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,3 +45,17 @@ class GoalSerializer(serializers.ModelSerializer):
         model=Goal
         fields=('id','name','user','value',"current_percent")
 
+
+class BaseExerciseSerializer(serializers.ModelSerializer):
+    label=serializers.SerializerMethodField()
+
+    def get_label(self,obj):
+        return obj.name
+
+    value=serializers.SerializerMethodField()
+
+    def get_value(self,obj):
+        return obj.name
+    class Meta:
+        model=BaseExercise
+        fields=('label','value')

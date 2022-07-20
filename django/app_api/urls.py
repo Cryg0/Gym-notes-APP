@@ -1,5 +1,7 @@
 from django.urls import path
-from .views import PostList, PostDetail,WorkoutDetail,WorkoutList,ExerciseList,ExerciseDetail,ChartsData,GoalList,GoalDetail
+from .views import (PostList, PostDetail,WorkoutDetail,WorkoutList,
+                    ExerciseList,ExerciseDetail,ChartsData,GoalList,
+                    GoalDetail,BaseExerciseList)
 
 
 app_name='app.api'
@@ -15,5 +17,7 @@ urlpatterns=[
     path('chart-data/',ChartsData.as_view(),name='chart-data'),
     path('goals/',GoalList.as_view(),name='goals-list'),
     path('goals/<int:pk>/',GoalDetail.as_view(),name='goal-detail'),
+    path('base-exercises/',BaseExerciseList.as_view(),name='baseEx-list'),
+
 
 ]

@@ -76,3 +76,7 @@ class Goal(models.Model):
         return self.name
 
 
+class BaseExercise(models.Model):
+    name=models.CharField(max_length=50)
+    category=models.ForeignKey(Category,on_delete=models.SET_NULL,null=True)
+

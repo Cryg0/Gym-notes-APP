@@ -7,35 +7,22 @@ import AuthContext from "./context/AuthContext";
 const WorkoutAdd = props => {
 
   let {user}=React.useContext(AuthContext)
+
+  const[baseExercises,setBaseExercises]=React.useState([])
   
-    const data = [
-        {
-          value: "Bench press",
-          label: "Bench press"
-        },
-        {
-          value: "Barbell squats",
-          label: "Barbell squats"
-        },
-        {
-          value: "Pullover",
-          label: "Pullover"
-        },
-        {
-          value: "Deadlift",
-          label: "Deadlift"
-        },
-        {
-          value: "Military press",
-          label: "Military press"
-        },
-        {
-          value: "Legs extentions",
-          label: "Legs extensions"
-        }
-      ];
+
+
+
+  React.useEffect(()=>{
+    axios.get('/base-exercises/')
+    .then((res)=>{
+      setBaseExercises(res.data)
+    })
+  },[])
+    
     const [selectedValues, setSelectedValues] = React.useState([])
     const test= (field,value)=>{
+      console.log(value)
       switch(field){
         case 'roles':
           setSelectedValues(value)
@@ -121,7 +108,7 @@ const formSubmit=()=>{
       isClearable
       isMulti
       onChange={(value)=>test('roles',value)}
-      options={data}
+      options={baseExercises}
       value={selectedValues}
 
 

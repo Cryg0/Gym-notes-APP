@@ -46,6 +46,10 @@ React.useEffect(()=>{
       if (response.status ===200){
           setFinishedWorkoutsData(response.data)
       }
+      else{
+        console.log(response)
+        logoutUser()
+      }
         
   
   } ).catch(()=>{

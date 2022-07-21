@@ -44,7 +44,6 @@ class Exercise(models.Model):
     reps=models.IntegerField(default=0)
     workout=models.ForeignKey('Workout',on_delete=models.CASCADE,related_name='exercises')
     
-    
     def __str__(self) -> str:
         return self.name
 
@@ -52,7 +51,8 @@ class Workout(models.Model):
     
     options= ( 
         ('finished','Finished'),
-        ('active','Active') )
+        ('active','Active'),
+        ('started','Started'))
 
     name=models.CharField(max_length=100)
     date=models.DateTimeField(default=timezone.now)

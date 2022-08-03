@@ -9,6 +9,7 @@ import axios from 'axios'
 
     const [user,setUser]=useState(JSON.parse(localStorage.getItem('User')))
     const [res,setRes]=useState({})
+
     
     let loginUser=  (e)=>{
         e.preventDefault()
@@ -33,8 +34,7 @@ import axios from 'axios'
         }
 
  let logoutUser = async ()=>{
-       
-        await axios.post('/user/logout/',{},{withCredentials:true})
+        await axios.post('/user/logout/',{},{withCredentials:true,Authorization:null})
         localStorage.removeItem('User')
         localStorage.removeItem('Access_token')
         setUser(null)

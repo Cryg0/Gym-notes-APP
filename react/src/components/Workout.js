@@ -2,15 +2,16 @@ import React from 'react'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import ExerciseAdd from './ExerciseAdd'
-
+import { useLocation } from "react-router-dom"
 import ExerciseUpdate from './ExerciseUpdate'
 
 const Swal = require('sweetalert2')
 
 export default function Workout(){
 const {workoutId}=useParams()
- 
+const location = useLocation()
 
+const [status,setStatus]=React.useState(location.state?.status)
 const [workoutData,setWorkoutData]=React.useState([])
 const [isClicked, setIsClicked] = React.useState(false)
 const [isClicked1, setIsClicked1] = React.useState(false)
@@ -77,12 +78,19 @@ const handlePopup1 = () => {
     setIsClicked1(prev => !prev)}
   
 
-
+const finishWorkout =()=>{
+    axios.put('/workouts/'+workoutId+'/',{'status':'finished'})
+    .then((res)=>{
+        console.log(res)
+        setStatus('Finished')
+    })
+}
 
     return(
       <div className="container ">
-        <div className='col'><button onClick={(handlePopup1)} style={{float:'right'}} type="button" className="btn btn-primary btn-lg mb-2">Add exercise</button></div>
-        
+        <div className='col'><button onClick={(handlePopup1)} style={{float:'right'}} type="button" className="btn btn-primary btn-lg ms-2">Add exercise</button></div>
+        { status ==='active' && <div className='col'><button onClick={finishWorkout} style={{float:'right',backgroundColor:'green'}} type="button" className="btn btn-primary btn-lg mb-2" >Finish workout</button></div>}
+
         {isClicked && <ExerciseUpdate handleClose={handlePopup} workout={workoutId} exercise={exerciseId} />}
         {isClicked1 && <ExerciseAdd handleClose={handlePopup1} workout={workoutId}  />}
       <table className="table table-borderless table-responsive card-1 p-4 ">

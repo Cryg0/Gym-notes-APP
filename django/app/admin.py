@@ -9,8 +9,15 @@ class AuthorAdmin(admin.ModelAdmin):
     list_filter=('author',)
     search_fields= ['status']
 
+
+@admin.register(models.Workout)
+class WorkoutAdmin(admin.ModelAdmin):
+    list_display=('id','name','user','status',)
+    list_filter=('user',)
+    search_fields= ['status']
+
 admin.site.register(models.Category)
 admin.site.register(models.Exercise)
-admin.site.register(models.Workout)
+
 admin.site.register(models.Goal)
 admin.site.register(models.BaseExercise)

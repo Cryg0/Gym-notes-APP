@@ -82,27 +82,31 @@ class RefreshAPIView(APIView):
 class LogoutAPIView(APIView):
     def post(self, request):
         response = Response()
+        refresh_token = request.COOKIES.get('refreshToken')
+        print(refresh_token)
+        token= RefreshToken(refresh_token)
+        token.blacklist()
         response.delete_cookie("refreshToken")
         response.data = {
             'message': 'success'
         }
-        return response
+        Response(status=status.HTTP_200_OK)
 
 
 
-class BlackListTokenView(APIView):
+# class BlackListTokenView(APIView):
 
-    permission_classes=[AllowAny]
+#     permission_classes=[AllowAny]
 
-    def post(self,request):
-        try:
-            refresh_token=request.data['refresh']
-            token= RefreshToken(refresh_token)
-            token.blacklist()
-            return Response(status=status.HTTP_200_OK)
+#     def post(self,request):
+#         try:
+#             refresh_token=request.data['refresh']
+#             token= RefreshToken(refresh_token)
+#             token.blacklist()
+#             return Response(status=status.HTTP_200_OK)
            
-        except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+#         except Exception as e:
+#             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @method_decorator(UserMiddleware, name='dispatch')
 class UserProfile(APIView):

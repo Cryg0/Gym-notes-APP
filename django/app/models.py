@@ -37,7 +37,7 @@ class Category(models.Model):
         return self.part
 
 class Exercise(models.Model):
-    name=models.CharField(max_length=100,null=False)
+    name=models.CharField(max_length=100,null=False,blank=False)
     category=models.ForeignKey(Category,on_delete=models.SET_NULL,null=True)
     weight=models.IntegerField(default=0)
     sets=models.IntegerField(default=0)
@@ -54,7 +54,7 @@ class Workout(models.Model):
         ('active','Active'),
         ('started','Started'))
 
-    name=models.CharField(max_length=100)
+    name=models.CharField(max_length=100,blank=False,null=False)
     date=models.DateTimeField(default=timezone.now)
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     status=models.CharField(max_length=10,choices=options,default='Active')
@@ -68,7 +68,7 @@ class Workout(models.Model):
         
 
 class Goal(models.Model):
-    name=models.CharField(max_length=100)
+    name=models.CharField(max_length=100,blank=False,null=False)
     value=models.IntegerField(default=1)
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='goals')
 
@@ -80,3 +80,5 @@ class BaseExercise(models.Model):
     name=models.CharField(max_length=50)
     category=models.ForeignKey(Category,on_delete=models.SET_NULL,null=True)
 
+    def __str__(self) -> str:
+        return self.name

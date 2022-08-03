@@ -48,12 +48,12 @@ React.useEffect(()=>{
       }
       else{
         console.log(response)
-        logoutUser()
+    
       }
         
   
   } ).catch(()=>{
-    logoutUser()
+    
   });
   },[pageF,isClicked,isClicked2,load,logoutUser] );  
   
@@ -160,7 +160,7 @@ const handlePageClick = (data,status)=>{
                     <td className="row">
                         <div className="d-flex align-items-center">
                             <span className="bg-pink me-1"></span>
-                            <Link to={`/workouts/${workout.id}`}><span>{workout.name}</span></Link>
+                            <Link to={`/workouts/${workout.id}`} state={{status:workout.status}}><span>{workout.name}</span></Link>
                         </div>
                     </td>
                     <td className="text-center">{workout.date.slice(0,10)+" "+workout.date.slice(11,16)}</td>

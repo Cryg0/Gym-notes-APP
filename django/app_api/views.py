@@ -45,7 +45,7 @@ class WorkoutList(APIView):
         serializer = WorkoutSerializer(data=request.data)
         exercises=request.data['exercises']
         
-        if serializer.is_valid():
+        if serializer.is_valid() and exercises !='':
             workout=serializer.save()
 
             if workout:
@@ -83,12 +83,40 @@ class WorkoutList(APIView):
         
         return Response({'data':serializer.data})
    
-class WorkoutDetail(generics.RetrieveUpdateDestroyAPIView):
-
+class WorkoutDetail(APIView):
     permission_classes=permission  
-    queryset=Workout.objects.all()
-    serializer_class=WorkoutSerializer
+    
+    def get(self,request,pk):
+        workout=Workout.objects.get(pk=pk)
+        serializer = WorkoutSerializer(workout)
+        return Response(serializer.data)
+       
 
+    def put(self,request,pk,format=None):
+        workout=Workout.objects.get(pk=pk)
+        print(workout)
+        serializer = WorkoutSerializer(workout, data=request.data,partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+   
+    def delete(self, request, pk, format=None):
+        workout = Workout.objects.get(pk=pk)
+        workout.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+@method_decorator(UserMiddleware, name='dispatch')
+class LatestWorkout(APIView):
+    def get(self,request,user):
+        workout_latest=Workout.objects.filter(status='active',user=user).first()
+        workout_started=Workout.objects.filter(status='started').first()
+
+        if not workout_started:
+            serializer=WorkoutSerializer(workout_latest)
+        else:
+            serializer=WorkoutSerializer(workout_started)
+        return Response(serializer.data)
 
 @method_decorator(UserMiddleware, name='dispatch')
 class ExerciseList(APIView):  

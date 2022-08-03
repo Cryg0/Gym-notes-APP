@@ -57,12 +57,14 @@ const WorkoutUpdate = props => {
     try {
       axios.get('/workouts/' + props.workout + '/')
         .then((res) => {
+          
           setWorkoutData(res.data);
         });
     } catch (error) {
       console.log(error)
     }
   }, [])
+
 
 
 
@@ -86,6 +88,7 @@ const WorkoutUpdate = props => {
             <select value={workoutData.status} onChange={handleChange} name="status">
               <option value='active'>Active</option>
               <option value='finished'>Finished</option>
+              <option value='started'>Started</option>
             </select>
 
           </div>

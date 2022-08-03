@@ -1,11 +1,12 @@
 import AuthContext from './context/AuthContext'
 import React from 'react'
 import {Link} from 'react-router-dom'
+import LatestWorkout from './LatestWorkout'
 
 export default function Header(){
 
 let {user,logoutUser}= React.useContext(AuthContext)
-
+LatestWorkout()
 
 return (
   <nav className="navbar sticky-top navbar-expand-lg navbar-light bg-light " >
@@ -26,7 +27,7 @@ return (
           </li>
         </ul>
 
-
+        <LatestWorkout/>
         {/* <ul className="navbar-nav me-auto mb-2 mb-lg-0">
 
 
